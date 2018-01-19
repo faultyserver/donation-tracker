@@ -238,6 +238,18 @@ class TestDonorView(TransactionTestCase):
         self.assertEqual(views.donor(request, self.donor.id).status_code, 404)
 
 
+class TestDonorAlias(TransactionTestCase):
+    def test_alias_no_missing(self):
+        donor = models.Donor.objects.create(alias='Raelcun')
+        self.assertNotEqual(donor.alias_no, None)
+
+    def test_alias_cleared(self):
+        donor = models.Donor.objects.create(alias='Raelcun', alias_no=1000)
+        donor.alias = None
+        donor.save()
+        self.assertEqual(donor.alias_no, None)
+
+
 class TestDonorAdmin(TransactionTestCase):
     def setUp(self):
         self.super_user = User.objects.create_superuser(
