@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 
 function modelStatusLoading(state, action) {
     return _.extend({}, state, {[action.model]: 'loading'});

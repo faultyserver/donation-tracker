@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 
 import jquery from 'jquery';
 const $ = window.$ || jquery; // until I can figure out why CSRF token isn't being used...

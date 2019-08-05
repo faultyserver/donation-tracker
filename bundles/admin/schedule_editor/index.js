@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import _ from 'underscore';
+import _ from 'lodash';
 
 import {actions} from 'ui/public/api';
 import Spinner from 'ui/public/spinner';

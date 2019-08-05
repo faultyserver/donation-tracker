@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 
 function modelNewDraft(state, action) {
     const m = action.model;

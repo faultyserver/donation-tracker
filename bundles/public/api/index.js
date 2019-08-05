@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import { compose, combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
