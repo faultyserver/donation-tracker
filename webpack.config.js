@@ -3,7 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const sharedConfig = require('./shared.webpack')();
 const WebpackManifestPlugin = require('webpack-yam-plugin');
 const _ = require('lodash');
-
+const TerserPlugin = require('terser-webpack-plugin-legacy');
 
 const PROD = process.env.NODE_ENV === 'production';
 
@@ -36,7 +36,17 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
-    PROD && new webpack.optimize.UglifyJsPlugin({comments: false}),
+    PROD && new TerserPlugin({
+      extractComments: {
+        condition: /@preserve|@license|@cc_on/i,
+        filename: (file) => {
+          return `${file}.LICENSE`;
+        },
+        banner: (licenseFile) => {
+          return `License information can be found in ${licenseFile}`;
+        },
+      },
+    }),
   ]),
   devServer: PROD ? {} : sharedConfig.devServer,
   resolve: sharedConfig.resolve,
