@@ -24,6 +24,15 @@ module.exports = {
     admin: ['./bundles/init', './bundles/admin'],
     donate: ['./bundles/init', './bundles/donate'],
   },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true, // Must be set to true if using source-maps in production
+      }),
+    ],
+  },
   output: {
     'filename': PROD ? 'tracker-[name]-[hash].js' : 'tracker-[name].js',
     'pathinfo': true,
@@ -31,7 +40,6 @@ module.exports = {
     'publicPath': '/static/gen',
   },
   plugins: _.compact([
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new WebpackManifestPlugin({
       manifestPath: __dirname + '/ui-tracker.manifest.json',
       outputRoot: __dirname + '/static'
@@ -114,7 +122,6 @@ module.exports = {
     },
   },
   stats: 'minimal',
-  externals: keyMirror(packageJSON.dependencies),
   devServer: {
     proxy: [{
       context: [
