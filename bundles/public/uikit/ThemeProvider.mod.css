@@ -1,0 +1,15 @@
+.themeMap {
+  /* "brand" isn't really accurate here, but for now it's a placeholder to mean "not gray" */
+  --brand-primary: #5E0324;
+  --background-primary: #fff;
+  --background-secondary: #f2f2f2;
+  --border-primary: 1px solid #DD82A3;
+  --header-normal: var(--brand-primary);
+  --header-muted: #000; /* Currently unused */
+  --text-normal: var(--brand-primary);
+  --text-muted: #000; /* Currently unused */
+  --text-link: #0076a3;
+  --text-inverted: #fff;
+  --font-primary: museo-sans, "Museo Sans 500 Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-secondary: Cubano, futura-pt, museo-sans, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

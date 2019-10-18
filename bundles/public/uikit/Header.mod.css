@@ -1,0 +1,51 @@
+.header {
+  font-weight: 700;
+  font-family: var(--font-secondary);
+  margin: 0;
+}
+
+.withMargin {
+  margin-bottom: 1rem;
+}
+
+.size1 {
+  font-size: 32px;
+  letter-spacing: -0.5px;
+}
+
+.size2 {
+  font-size: 28px;
+  letter-spacing: -0.5px;
+}
+
+.size3 {
+  font-size: 24px;
+  letter-spacing: -0.25px;
+}
+
+.size4 {
+  font-size: 20px;
+  letter-spacing: -0.25px;
+}
+
+.size5 {
+  font-size: 16px;
+  letter-spacing: -0.25px;
+}
+
+.size6 {
+  font-size: 14px;
+}
+
+.sizeHuge {
+  font-size: 64px;
+}
+
+
+.colorNormal {
+  color: var(--header-normal);
+}
+
+.colorMuted {
+  color: var(--header-muted);
+}
