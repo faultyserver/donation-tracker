@@ -6,13 +6,30 @@ import cn from 'classnames';
 import Anchor from '../public/uikit/Anchor';
 import Button from '../public/uikit/Button';
 import Header from '../public/uikit/Header';
+import RadioGroup from '../public/uikit/RadioGroup';
 import Text from '../public/uikit/Text';
 import TextInput from '../public/uikit/TextInput';
 import Incentives, {IncentiveProps} from './components/Incentives';
 import Prizes from './components/Prizes';
 
-
 import styles from './Donate.mod.css';
+
+
+const EMAIL_OPTIONS = [
+  {
+    name: 'Yes',
+    value: 'OPTIN',
+  },
+  {
+    name: 'No',
+    value: 'OPTOUT',
+  },
+  {
+    name: 'Use Existing Preference (No if not set)',
+    value: 'CURR',
+  }
+];
+const AMOUNT_PRESETS = [25, 50, 75, 100, 250, 500];
 
 
 class Donate extends React.PureComponent {
@@ -181,8 +198,6 @@ class Donate extends React.PureComponent {
     // TODO: show more form errors
     const finishDisabled = this.finishDisabled_();
 
-    const amountPresets = [25, 50, 75, 100, 250, 500];
-
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
@@ -191,7 +206,6 @@ class Donate extends React.PureComponent {
           <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {event.receivername}.</Text>
 
           <input type="hidden" name="requestedvisibility" value={requestedalias ? 'ALIAS' : 'ANON'}/>
-
           <TextInput
             name="requestedalias"
             value={requestedalias}
@@ -216,30 +230,15 @@ class Donate extends React.PureComponent {
         </section>
 
         <section className={styles.section}>
-          <Text size={Text.Sizes.SIZE_16} marginless>
-            Do you want to receive emails from {event.receivername}?
-          </Text>
-
+          <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {event.receivername}?</Text>
           <div className={styles.emailButtons}>
             <input type="hidden" name="requestedsolicitemail" value={requestedsolicitemail}/>
-            <Button
-                id='email_optin'
-                look={requestedsolicitemail === 'OPTIN' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('OPTIN')}>
-              Yes
-            </Button>
-            <Button
-                id='email_optin'
-                look={requestedsolicitemail === 'OPTOUT' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('OPTOUT')}>
-              No
-            </Button>
-            <Button
-                id='email_optin'
-                look={requestedsolicitemail === 'CURR' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('CURR')}>
-              Use Existing Preference (No if not already set)
-            </Button>
+            <RadioGroup
+              className={styles.emailOptin}
+              options={EMAIL_OPTIONS}
+              value={requestedsolicitemail}
+              onChange={this.setEmail}
+            />
           </div>
         </section>
 
@@ -258,12 +257,13 @@ class Donate extends React.PureComponent {
             min={minimumDonation}
             max={maximumDonation}
           />
-          <div className={styles.buttons}>
-            {amountPresets.map((amount) => (
+          <div className={styles.amountPresets}>
+            {AMOUNT_PRESETS.map((amount) => (
               <Button
+                  className={styles.amountPreset}
                   key={amount}
                   look={Button.Looks.OUTLINED}
-                  size={Button.Sizes.SMALL}
+                  // size={Button.Sizes.SMALL}
                   onClick={this.setAmount(amount)}>
                 ${amount}
               </Button>
