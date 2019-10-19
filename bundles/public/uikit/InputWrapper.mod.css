@@ -14,11 +14,8 @@
   position: relative;
   width: 100%;
   margin-bottom: 4px;
-  border-bottom: 1px solid var(--brand-primary);
-
-  &:hover {
-    background-color: var(--background-tertiary);
-  }
+  border-bottom: var(--border-primary);
+  background-color: var(--background-tertiary);
 
   &:focus,
   &:focus-within {

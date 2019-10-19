@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 
-import Incentives, {IncentiveProps} from './components/incentives';
 import Anchor from '../public/uikit/Anchor';
 import Button from '../public/uikit/Button';
 import Header from '../public/uikit/Header';
 import Text from '../public/uikit/Text';
 import TextInput from '../public/uikit/TextInput';
+import Incentives, {IncentiveProps} from './components/Incentives';
+import Prizes from './components/Prizes';
+
 
 import styles from './donate.css';
 
@@ -144,10 +146,6 @@ class Donate extends React.PureComponent {
     return null;
   }
 
-  wrapPrize_(prize, children) {
-    return prize.url ? <a href={prize.url}>{children}</a> : children;
-  }
-
   componentDidMount() {
     this.setState({
       bidsformmanagement: Array.from(document.querySelector('table[data-form=bidsform][data-form-type=management]').querySelectorAll('input')).filter(i => i.id),
@@ -189,9 +187,7 @@ class Donate extends React.PureComponent {
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
         <section className={styles.section}>
           <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
-          <Text size={Text.Sizes.SIZE_16}>
-            100% of your donation goes directly to {event.receivername}.
-          </Text>
+          <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {event.receivername}.</Text>
 
           <input type="hidden" name="requestedvisibility" value={requestedalias ? 'ALIAS' : 'ANON'}/>
 
@@ -210,14 +206,11 @@ class Donate extends React.PureComponent {
             label="Email Address"
             hint={
               <React.Fragment>
-                Click
-                <Anchor href='https://gamesdonequick.com/privacy/' external newTab>here</Anchor>
-                for our privacy policy
+                Click <Anchor href='https://gamesdonequick.com/privacy/' external newTab>here</Anchor> for our privacy policy
               </React.Fragment>
             }
             size={TextInput.Sizes.LARGE}
             onChange={this.setValue('requestedemail')}
-            maxLength={32}
           />
         </section>
 
@@ -254,12 +247,13 @@ class Donate extends React.PureComponent {
             name="amount"
             value={amount}
             label="Amount"
-            hint={`Minimum donation is $${minimumDonation}`}
+            leader="$"
+            placeholder="0.00"
+            hint={<React.Fragment>Minimum donation is <strong>${minimumDonation}</strong></React.Fragment>}
             size={TextInput.Sizes.LARGE}
             type={TextInput.Types.NUMBER}
             onChange={this.setValue('amount')}
             step={step}
-            leader="$"
             min={minimumDonation}
             max={maximumDonation}
           />
@@ -267,51 +261,20 @@ class Donate extends React.PureComponent {
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(25)}>$25</Button>
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(50)}>$50</Button>
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(75)}>$75</Button>
-          </div>
-          <div className={styles.buttons}>
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(100)}>$100</Button>
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(250)}>$250</Button>
             <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(500)}>$500</Button>
           </div>
         </section>
 
-        { prizes.length
-          ? <section className={styles.section}>
-              <Header size={Header.Sizes.H3}>Prizes</Header>
-              <Text size={Text.Sizes.SIZE_16}>Donations can enter you to win prizes!</Text>
-              <div className={styles.prizeList}>
-                <div className={styles.prizes}>
-                  {prizes.map(prize =>
-                    <div key={prize.id} className={styles.item}>
-                      { this.wrapPrize_(prize,
-                          <React.Fragment>
-                            <Text size={Text.Sizes.SIZE_16}>{prize.name}</Text>
-                            <Text size={Text.Sizes.SIZE_14}>
-                              ${prize.minimumbid} {prize.sumdonations ? 'Total Donations' : 'Minimum Single Donation'}
-                            </Text>
-                          </React.Fragment>
-                        )
-                      }
-                    </div>
-                  )}
-                </div>
-              </div>
-              <p>
-                <Anchor href={prizesUrl} external newTab>Full prize list (New tab)</Anchor>
-              </p>
-              { rulesUrl
-                ? <React.Fragment>
-                    <p><Anchor href={rulesUrl} external newTab>Official Rules (New tab)</Anchor></p>
-                    <Text size={Text.Sizes.SIZE_12}>No donation necessary for a chance to win. See sweepstakes rules for details and instructions.</Text>
-                  </React.Fragment>
-                : null
-              }
-            </section>
-          : null
+        { prizes.length > 0 &&
+          <section className={styles.section}>
+            <Prizes prizes={prizes} prizesURL={prizesUrl} rulesURL={rulesUrl} />
+          </section>
         }
 
         <section className={styles.section}>
-          <Header size={Header.Sizes.H3}>LEAVE A COMMENT?</Header>
+          <Header size={Header.Sizes.H3}>Leave a Comment?</Header>
           <TextInput
             name="comment"
             value={comment}

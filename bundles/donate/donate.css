@@ -12,71 +12,14 @@
   display: flex;
 }
 
-.prizeList {
-  border-radius: 5px;
-  border: 1px solid #5E0324;
-  width: 256px;
-
-  & .prizes {
-    max-height: 224px;
-    overflow-y: auto;
-  }
-
-  & .header {
-    border-width: 0 0 1px 0;
-    border-style: solid;
-    border-color: #5E0324;
-    padding: 4px;
-  }
-
-  & .item {
-    padding: 4px;
-
-    &:nth-child(2n+1) {
-      background-color: rgba(94, 3, 36, 0.1);
-    }
-
-    & a {
-      color: #5E0324;
-    }
-
-    & div {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    & .name {
-      font-size: 16px;
-    }
-
-    & .bidinfo {
-      font-size: 14px;
-    }
-  }
-}
-
-.commentInput {
-  width: 525px;
-  height: 101px;
-
-  border: 1px solid #5E0324;
-  box-sizing: border-box;
-  border-radius: 5px;
-  resize: none;
-}
-
 .buttons {
   display: flex;
+  justify-content: stretch;
+  flex-wrap: wrap;
+  width: 100%;
 
-  & button {
-    flex-grow: 1;
-    flex-shrink: 0;
-    margin-bottom: 5px;
-
-    &:not(:last-of-type) {
-      margin-right: 5px;
-    }
+  & > * {
+    flex: 1 1 auto;
   }
 }
 

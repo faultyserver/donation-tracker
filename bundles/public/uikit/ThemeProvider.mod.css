@@ -4,7 +4,7 @@
   --background-primary: #fff;
   --background-secondary: #efe5e9;
   --background-tertiary: #f9f6f7;
-  --border-primary: 1px solid #DD82A3;
+  --border-primary: 1px solid var(--brand-primary);
   --header-normal: var(--brand-primary);
   --header-muted: #a26179;
   --text-normal: var(--brand-primary);
@@ -17,7 +17,7 @@
 
   /* Base styles to apply to all components by default */
   font-family: var(--font-primary);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   color: var(--text-normal);
 }
