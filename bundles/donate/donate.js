@@ -8,6 +8,7 @@ import Anchor from '../public/uikit/Anchor';
 import Button from '../public/uikit/Button';
 import Header from '../public/uikit/Header';
 import Text from '../public/uikit/Text';
+import TextInput from '../public/uikit/TextInput';
 
 import styles from './donate.css';
 
@@ -184,67 +185,82 @@ class Donate extends React.PureComponent {
     const finishDisabled = this.finishDisabled_();
 
     return (
-      <form className={styles.donationForm} action={donateUrl} method='post' onSubmit={onSubmit}>
-        <input type='hidden' name='csrfmiddlewaretoken' value={csrfToken}/>
+      <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
+        <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
         <div className={styles.donation}>
-          <Header size={Header.Sizes.HUGE}>THANK YOU</Header>
-          <Header size={Header.Sizes.H1} withMargin>FOR YOUR DONATION</Header>
+          <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
           <Text size={Text.Sizes.SIZE_16}>
             100% of your donation goes directly to {event.receivername}.
           </Text>
 
-          <div className={styles.biginput}>
-            <input type='hidden' name='requestedvisibility' value={requestedalias ? 'ALIAS' : 'ANON'}/>
-            <input className={cn(styles.underline, styles.preferredNameInput)} placeholder='Preferred Name/Alias'
-                   type='text' name='requestedalias' value={requestedalias} onChange={this.setValue('requestedalias')}
-                   maxLength='32'/>
-            <Text size={Text.Sizes.SIZE_16}>Leave blank for Anonymous</Text>
-          </div>
-          <div className={styles.biginput}>
-            <input className={cn(styles.underline, styles.preferredEmailInput)} placeholder='Email Address'
-                   type='email' name='requestedemail' value={requestedemail} maxLength='128'
-                   onChange={this.setValue('requestedemail')}/>
-            <Text size={Text.Sizes.SIZE_16}>
-              Click
-              <Anchor href='https://gamesdonequick.com/privacy/' external newTab>here</Anchor>
-              for our privacy policy
-            </Text>
-          </div>
+          <input type="hidden" name="requestedvisibility" value={requestedalias ? 'ALIAS' : 'ANON'}/>
+
+          <TextInput
+            name="requestedalias"
+            value={requestedalias}
+            label="Preferred Name/Alias"
+            hint="Leave blank to donate anonymously"
+            size={TextInput.Sizes.LARGE}
+            onChange={this.setValue('requestedalias')}
+            maxLength={32}
+          />
+          <TextInput
+            name="requestedemail"
+            value={requestedemail}
+            label="Email Address"
+            hint={
+              <React.Fragment>
+                Click
+                <Anchor href='https://gamesdonequick.com/privacy/' external newTab>here</Anchor>
+                for our privacy policy
+              </React.Fragment>
+            }
+            size={TextInput.Sizes.LARGE}
+            onChange={this.setValue('requestedemail')}
+            maxLength={32}
+          />
 
           <Text size={Text.Sizes.SIZE_16} marginless>
             Do you want to receive emails from {event.receivername}?
           </Text>
 
           <div className={styles.emailButtons}>
-            <input type='hidden' name='requestedsolicitemail' value={requestedsolicitemail}/>
+            <input type="hidden" name="requestedsolicitemail" value={requestedsolicitemail}/>
             <Button
                 id='email_optin'
                 look={requestedsolicitemail === 'OPTIN' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('OPTIN')}
-              >
+                onClick={() => this.setEmail('OPTIN')}>
               Yes
             </Button>
             <Button
                 id='email_optin'
                 look={requestedsolicitemail === 'OPTOUT' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('OPTOUT')}
-              >
+                onClick={() => this.setEmail('OPTOUT')}>
               No
             </Button>
             <Button
                 id='email_optin'
                 look={requestedsolicitemail === 'CURR' ? Button.Looks.FILLED : Button.Looks.OUTLINED}
-                onClick={() => this.setEmail('CURR')}
-              >
+                onClick={() => this.setEmail('CURR')}>
               Use Existing Preference (No if not already set)
             </Button>
           </div>
 
           <div className={styles.donationArea}>
             <div className={styles.donationAmount}>
-              <input className={cn(styles.underline, styles.amountInput)} placeholder='Enter Amount' type='number'
-                     name='amount' value={amount} step={step} min={minimumDonation} max={maximumDonation}
-                     onChange={this.setValue('amount')}/>
+              <TextInput
+                name="amount"
+                value={amount}
+                label="Amount"
+                hint={`Minimum donation is $${minimumDonation}`}
+                size={TextInput.Sizes.LARGE}
+                type={TextInput.Types.NUMBER}
+                onChange={this.setValue('amount')}
+                step={step}
+                leader="$"
+                min={minimumDonation}
+                max={maximumDonation}
+              />
               <div className={styles.buttons}>
                 <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(25)}>$25</Button>
                 <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(50)}>$50</Button>
@@ -255,14 +271,14 @@ class Donate extends React.PureComponent {
                 <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(250)}>$250</Button>
                 <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(500)}>$500</Button>
               </div>
-              <Text size={Text.Sizes.SIZE_14}>(Minimum donation is ${minimumDonation})</Text>
+              <Text size={Text.Sizes.SIZE_14}></Text>
             </div>
 
             { prizes.length
               ? <div className={styles.prizeInfo}>
                   <div className={styles.cta}>Donations can enter you to win prizes!</div>
                   <div className={styles.prizeList}>
-                    <Header size={Header.Sizes.H3}>CURRENT PRIZE LIST:</Header>
+                    <Header size={Header.Sizes.H3} marginless>CURRENT PRIZE LIST:</Header>
                     <div className={styles.prizes}>
                       {prizes.map(prize =>
                         <div key={prize.id} className={styles.item}>

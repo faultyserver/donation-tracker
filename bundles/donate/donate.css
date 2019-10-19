@@ -1,61 +1,13 @@
 .donationForm {
-  font-family: museo-sans,"Museo Sans 500 Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-weight: 500;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 720px;
-
-  & input.underline {
-    border: none;
-    border-bottom: 2px;
-    border-bottom-style: solid;
-    border-color: #5E0324;
-  }
-}
-
-.biginput {
-  padding: 20px 0;
-}
-
-.subtitle {
-  font-size: 14px;
-  margin-top: 2px;
-}
-
-
-.donation {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding-top: 32px;
-
-  & input {
-    border: none;
-  }
-}
-
-.preferredNameInput {
-  font-family: museo-sans,"Museo Sans 500 Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
-  line-height: normal;
-  font-size: 36px;
-  width: 525px;
-}
-
-.preferredEmailInput {
-  font-family: museo-sans,"Museo Sans 500 Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
-  line-height: normal;
-  font-size: 36px;
-  width: 525px;
+  margin: auto;
+  max-width: 720px;
 }
 
 .emailButtons {
   display: flex;
   flex-grow: 1;
   flex-shrink: 0;
-  width: 100%;
-  justify-content: center;
 }
 
 .amountInput {
@@ -66,19 +18,10 @@
   margin-bottom: 10px;
 }
 
-.donationCTA {
-  text-align: center;
-}
-
 .donationArea {
   margin-top: 40px;
   display: flex;
   flex-direction: row;
-}
-
-.donationAmount:before {
-  content: '$';
-  font-size: 36px;
 }
 
 .prizeInfo {

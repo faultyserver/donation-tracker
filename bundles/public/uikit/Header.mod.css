@@ -2,10 +2,11 @@
   font-weight: 700;
   font-family: var(--font-secondary);
   margin: 0;
+  margin-bottom: 1rem;
 }
 
-.withMargin {
-  margin-bottom: 1rem;
+.marginless {
+  margin-bottom: 0;
 }
 
 .size1 {
@@ -39,6 +40,10 @@
 
 .sizeHuge {
   font-size: 64px;
+  /* Overly-large fonts generally don't fully align their left edge (for optic
+  kerning). This margin offsets backwards to be visually aligned with the flow
+  of text on the rest of the page. */
+  margin-left: -2px;
 }
 
 

@@ -22,8 +22,9 @@ const Anchor = (props) => {
         className={classNames(styles.anchor, 'block-external')}
         href={href}
         target={target}
-        rel={rel}
-      >{children}</a>
+        rel={rel}>
+      {children}
+    </a>
   );
 };
 
