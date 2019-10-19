@@ -1,53 +1,15 @@
 .donationForm {
   padding-top: 32px;
   margin: auto;
-  max-width: 720px;
+  max-width: 640px;
+}
+
+.section {
+  margin-bottom: 32px;
 }
 
 .emailButtons {
   display: flex;
-  flex-grow: 1;
-  flex-shrink: 0;
-}
-
-.amountInput {
-  font-family: museo-sans,"Museo Sans 500 Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
-  line-height: normal;
-  font-size: 30px;
-  width: 239px;
-  margin-bottom: 10px;
-}
-
-.donationArea {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: row;
-}
-
-.prizeInfo {
-  margin-left: 20px;
-  margin-bottom: 39px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  & .disclaimer {
-    font-size: 12px;
-  }
-
-  & a.block-external {
-    border: 1px solid #5E0324;
-    border-radius: 5px;
-    width: 256px;
-    height: 44px;
-    margin-top: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #5E0324;
-  }
 }
 
 .prizeList {
@@ -94,20 +56,6 @@
   }
 }
 
-.commentArea {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 32px;
-
-  & label {
-    max-width: 525px;
-    text-align: left;
-    font-size: 12px;
-    line-height: 14px;
-    margin-top: 4px;
-  }
-}
-
 .commentInput {
   width: 525px;
   height: 101px;
@@ -135,12 +83,6 @@
 .incentivesButtons {
   display: flex;
   justify-content: center;
-}
-
-.incentivesCTA {
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 60px;
 }
 
 .incentives {

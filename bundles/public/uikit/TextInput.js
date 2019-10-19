@@ -19,6 +19,7 @@ const TextInput = (props) => {
     label,
     hint,
     placeholder,
+    multiline=false,
     size=InputWrapper.Sizes.NORMAL,
     type=TextInputTypes.TEXT,
     leader,
@@ -29,6 +30,12 @@ const TextInput = (props) => {
     ...extraProps
   } = props;
 
+  const Tag = multiline ? 'textarea' : 'input';
+
+  const maxLength = props.maxLength;
+  const usedLength = value.length;
+  const invalidLength = usedLength >= maxLength;
+
   return (
     <InputWrapper
         className={className}
@@ -38,8 +45,8 @@ const TextInput = (props) => {
         leader={leader}
         trailer={trailer}
         size={size}>
-      <input
-        className={classNames(styles.input)}
+      <Tag
+        className={classNames(styles.input, {[styles.multiline]: multiline})}
         placeholder={placeholder}
         type={type}
         name={name}
@@ -47,6 +54,11 @@ const TextInput = (props) => {
         onChange={onChange}
         {...extraProps}
       />
+      { maxLength != null &&
+        <div className={classNames(styles.lengthLimit, {[styles.invalidLength]: invalidLength})}>
+          {usedLength} / {maxLength}
+        </div>
+      }
     </InputWrapper>
   );
 };

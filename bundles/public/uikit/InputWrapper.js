@@ -25,9 +25,11 @@ const InputWrapper = (props) => {
   return (
     <div className={classNames(styles.container, size, className)}>
       { label != null &&
-        <Text className={styles.label} size={Text.Sizes.SIZE_14} marginless>
-          {label}
-        </Text>
+        <label htmlFor={name}>
+          <Text className={styles.label} size={Text.Sizes.SIZE_14} marginless>
+            {label}
+          </Text>
+        </label>
       }
       <div className={styles.input}>
         {leader != null && <div className={styles.leader}>{leader}</div>}

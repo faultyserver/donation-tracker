@@ -187,7 +187,7 @@ class Donate extends React.PureComponent {
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
-        <div className={styles.donation}>
+        <section className={styles.section}>
           <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
           <Text size={Text.Sizes.SIZE_16}>
             100% of your donation goes directly to {event.receivername}.
@@ -219,7 +219,9 @@ class Donate extends React.PureComponent {
             onChange={this.setValue('requestedemail')}
             maxLength={32}
           />
+        </section>
 
+        <section className={styles.section}>
           <Text size={Text.Sizes.SIZE_16} marginless>
             Do you want to receive emails from {event.receivername}?
           </Text>
@@ -245,108 +247,103 @@ class Donate extends React.PureComponent {
               Use Existing Preference (No if not already set)
             </Button>
           </div>
+        </section>
 
-          <div className={styles.donationArea}>
-            <div className={styles.donationAmount}>
-              <TextInput
-                name="amount"
-                value={amount}
-                label="Amount"
-                hint={`Minimum donation is $${minimumDonation}`}
-                size={TextInput.Sizes.LARGE}
-                type={TextInput.Types.NUMBER}
-                onChange={this.setValue('amount')}
-                step={step}
-                leader="$"
-                min={minimumDonation}
-                max={maximumDonation}
-              />
-              <div className={styles.buttons}>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(25)}>$25</Button>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(50)}>$50</Button>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(75)}>$75</Button>
-              </div>
-              <div className={styles.buttons}>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(100)}>$100</Button>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(250)}>$250</Button>
-                <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(500)}>$500</Button>
-              </div>
-              <Text size={Text.Sizes.SIZE_14}></Text>
-            </div>
+        <section className={styles.section}>
+          <TextInput
+            name="amount"
+            value={amount}
+            label="Amount"
+            hint={`Minimum donation is $${minimumDonation}`}
+            size={TextInput.Sizes.LARGE}
+            type={TextInput.Types.NUMBER}
+            onChange={this.setValue('amount')}
+            step={step}
+            leader="$"
+            min={minimumDonation}
+            max={maximumDonation}
+          />
+          <div className={styles.buttons}>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(25)}>$25</Button>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(50)}>$50</Button>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(75)}>$75</Button>
+          </div>
+          <div className={styles.buttons}>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(100)}>$100</Button>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(250)}>$250</Button>
+            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(500)}>$500</Button>
+          </div>
+        </section>
 
-            { prizes.length
-              ? <div className={styles.prizeInfo}>
-                  <div className={styles.cta}>Donations can enter you to win prizes!</div>
-                  <div className={styles.prizeList}>
-                    <Header size={Header.Sizes.H3} marginless>CURRENT PRIZE LIST:</Header>
-                    <div className={styles.prizes}>
-                      {prizes.map(prize =>
-                        <div key={prize.id} className={styles.item}>
-                          { this.wrapPrize_(prize,
-                              <React.Fragment>
-                                <Text size={Text.Sizes.SIZE_16}>{prize.name}</Text>
-                                <Text size={Text.Sizes.SIZE_14}>
-                                  ${prize.minimumbid} {prize.sumdonations ? 'Total Donations' : 'Minimum Single Donation'}
-                                </Text>
-                              </React.Fragment>
-                            )
-                          }
-                        </div>
-                      )}
+        { prizes.length
+          ? <section className={styles.section}>
+              <Header size={Header.Sizes.H3}>Prizes</Header>
+              <Text size={Text.Sizes.SIZE_16}>Donations can enter you to win prizes!</Text>
+              <div className={styles.prizeList}>
+                <div className={styles.prizes}>
+                  {prizes.map(prize =>
+                    <div key={prize.id} className={styles.item}>
+                      { this.wrapPrize_(prize,
+                          <React.Fragment>
+                            <Text size={Text.Sizes.SIZE_16}>{prize.name}</Text>
+                            <Text size={Text.Sizes.SIZE_14}>
+                              ${prize.minimumbid} {prize.sumdonations ? 'Total Donations' : 'Minimum Single Donation'}
+                            </Text>
+                          </React.Fragment>
+                        )
+                      }
                     </div>
-                  </div>
-                  <p>
-                    <Anchor href={prizesUrl} external newTab>Full prize list (New tab)</Anchor>
-                  </p>
-                  { rulesUrl
-                    ? <React.Fragment>
-                        <p><Anchor href={rulesUrl} external newTab>Official Rules (New tab)</Anchor></p>
-                        <Text size={Text.Sizes.SIZE_12}>No donation necessary for a chance to win. See sweepstakes rules for details and instructions.</Text>
-                      </React.Fragment>
-                    : null
-                  }
+                  )}
                 </div>
-              : null
-            }
-          </div>
-          <div className={styles.commentArea}>
-            <Header size={Header.Sizes.H5} withMargin>(OPTIONAL) LEAVE A COMMENT?</Header>
-            <textarea
-              className={styles.commentInput}
-              placeholder='Enter Comment Here'
-              value={comment}
-              onChange={this.setValue('comment')}
-              name='comment'
-              maxLength={5000}
-            />
-            <label htmlFor='comment'>Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable.</label>
-          </div>
-        </div>
+              </div>
+              <p>
+                <Anchor href={prizesUrl} external newTab>Full prize list (New tab)</Anchor>
+              </p>
+              { rulesUrl
+                ? <React.Fragment>
+                    <p><Anchor href={rulesUrl} external newTab>Official Rules (New tab)</Anchor></p>
+                    <Text size={Text.Sizes.SIZE_12}>No donation necessary for a chance to win. See sweepstakes rules for details and instructions.</Text>
+                  </React.Fragment>
+                : null
+              }
+            </section>
+          : null
+        }
+
+        <section className={styles.section}>
+          <Header size={Header.Sizes.H3}>LEAVE A COMMENT?</Header>
+          <TextInput
+            name="comment"
+            value={comment}
+            placeholder="Enter Comment Here"
+            hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
+            multiline
+            onChange={this.setValue('comment')}
+            maxLength={5000}
+            rows={5}
+          />
+        </section>
 
         <div className={styles.incentivesCTA}>
-          <Header size={Header.Sizes.H4} withMargin>DONATION INCENTIVES</Header>
-          <Text>
-            Donation incentives can be used to add bonus runs to the schedule or influence choices by runners. Do you wish to put your donation towards an incentive?
-          </Text>
+          <Header size={Header.Sizes.H3}>Donation Incentives</Header>
+          <Text>Donation incentives can be used to add bonus runs to the schedule or influence choices by runners. Do you wish to put your donation towards an incentive?</Text>
 
           <div className={styles.incentivesButtons}>
             <Button
-              disabled={showIncentives}
-              look={Button.Looks.FILLED}
-              size={Button.Sizes.LARGE}
-              id='show_incentives'
-              onClick={() => {
-                this.setState({showIncentives: true});
-              }}>
-              YES!
+                disabled={showIncentives}
+                look={Button.Looks.FILLED}
+                size={Button.Sizes.LARGE}
+                id='show_incentives'
+                onClick={() => this.setState({showIncentives: true})}>
+              Yes!
             </Button>
             <Button
-              id='skip_incentives'
-              look={Button.Looks.FILLED}
-              size={Button.Sizes.LARGE}
-              disabled={showIncentives || this.finishDisabled_()}
-              type='submit'>
-              NO, SKIP INCENTIVES
+                id='skip_incentives'
+                look={Button.Looks.FILLED}
+                size={Button.Sizes.LARGE}
+                disabled={showIncentives || this.finishDisabled_()}
+                type='submit'>
+              No, Skip Incentives
             </Button>
           </div>
           {!showIncentives && finishDisabled && <label htmlFor='skip' className='error'>{finishDisabled}</label>}
