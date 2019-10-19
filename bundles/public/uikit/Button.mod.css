@@ -30,11 +30,13 @@
 /* Colors */
 .colorPrimary {
   --_button-primary: var(--brand-primary);
+  --_button-hover: var(--background-tertiary);
   --_button-secondary: var(--text-inverted);
 }
 
 .colorNormal {
   --_button-primary: var(--background-primary);
+  --_button-hover: var(--background-tertiary);
   --_button-secondary: var(--text-normal);
 }
 
@@ -49,16 +51,20 @@
 .lookOutlined {
   border: 1px solid var(--_button-primary);
   color: var(--_button-primary);
+
+  &:hover {
+    background-color: var(--_button-hover);
+  }
 }
 
 
 /* Sizes */
 .sizeSmall {
   min-width: 48px;
-  padding: 4px 12px;
+  padding: 6px 12px;
   margin: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .sizeNormal {

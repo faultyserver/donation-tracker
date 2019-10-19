@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 
-import styles from '../donate.css';
+import styles from '../Donate.mod.css';
 
 export const IncentiveProps = PropTypes.shape({
   id: PropTypes.number.isRequired,

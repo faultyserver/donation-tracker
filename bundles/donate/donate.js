@@ -12,7 +12,7 @@ import Incentives, {IncentiveProps} from './components/Incentives';
 import Prizes from './components/Prizes';
 
 
-import styles from './donate.css';
+import styles from './Donate.mod.css';
 
 
 class Donate extends React.PureComponent {
@@ -79,7 +79,6 @@ class Donate extends React.PureComponent {
   setAmount = (amount) => {
     return e => {
       this.setState({amount});
-      e.preventDefault();
     }
   };
 
@@ -182,6 +181,8 @@ class Donate extends React.PureComponent {
     // TODO: show more form errors
     const finishDisabled = this.finishDisabled_();
 
+    const amountPresets = [25, 50, 75, 100, 250, 500];
+
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
@@ -258,12 +259,15 @@ class Donate extends React.PureComponent {
             max={maximumDonation}
           />
           <div className={styles.buttons}>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(25)}>$25</Button>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(50)}>$50</Button>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(75)}>$75</Button>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(100)}>$100</Button>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(250)}>$250</Button>
-            <Button look={Button.Looks.OUTLINED} onClick={this.setAmount(500)}>$500</Button>
+            {amountPresets.map((amount) => (
+              <Button
+                  key={amount}
+                  look={Button.Looks.OUTLINED}
+                  size={Button.Sizes.SMALL}
+                  onClick={this.setAmount(amount)}>
+                ${amount}
+              </Button>
+            ))}
           </div>
         </section>
 
@@ -295,7 +299,6 @@ class Donate extends React.PureComponent {
             <Button
                 disabled={showIncentives}
                 look={Button.Looks.FILLED}
-                size={Button.Sizes.LARGE}
                 id='show_incentives'
                 onClick={() => this.setState({showIncentives: true})}>
               Yes!
@@ -303,7 +306,6 @@ class Donate extends React.PureComponent {
             <Button
                 id='skip_incentives'
                 look={Button.Looks.FILLED}
-                size={Button.Sizes.LARGE}
                 disabled={showIncentives || this.finishDisabled_()}
                 type='submit'>
               No, Skip Incentives

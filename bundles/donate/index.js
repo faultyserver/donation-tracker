@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Donate from './donate';
+import Donate from './Donate';
 import ErrorBoundary from '../public/errorBoundary';
 import ThemeProvider from '../public/uikit/ThemeProvider';
 
