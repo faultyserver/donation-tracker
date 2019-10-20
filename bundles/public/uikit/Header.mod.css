@@ -1,13 +1,18 @@
 .header {
-  font-weight: 700;
-  font-family: var(--font-secondary);
   margin: 0;
   margin-bottom: 1rem;
+  font-weight: 700;
+  font-family: var(--font-secondary);
+}
+
+.oneline {
+  text-overflow: ellipsis;
 }
 
 .marginless {
   margin-bottom: 0;
 }
+
 
 .size1 {
   font-size: 32px;

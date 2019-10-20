@@ -323,12 +323,12 @@ class Donate extends React.PureComponent {
                 total={(amount || 0) - this.sumIncentives_()}
               />
               <div className={styles.finishArea}>
-                <Button
-                  id='finish'
-                  disabled={this.finishDisabled_()}
-                  type='submit'>
-                  FINISH
-                </Button>
+                <button
+                    id='finish'
+                    disabled={this.finishDisabled_()}
+                    type='submit'>
+                  Finish
+                </button>
                 {finishDisabled && <label htmlFor='finish' className='error'>{finishDisabled}</label>}
               </div>
             </React.Fragment>

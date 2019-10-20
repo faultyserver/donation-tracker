@@ -22,6 +22,7 @@ const Text = (props) => {
     size = Sizes.SIZE_16,
     color = Colors.NORMAL,
     marginless = false,
+    oneline = false,
     className,
     children
   } = props;
@@ -32,6 +33,7 @@ const Text = (props) => {
           color,
           size,
           className, {
+            [styles.oneline]: oneline,
             [styles.marginless]: marginless,
           }
         )}

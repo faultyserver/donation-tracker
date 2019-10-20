@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import cn from 'classnames';
+import classNames from 'classnames';
+
+import Button from '../../public/uikit/Button';
+import Clickable from '../../public/uikit/Clickable';
+import Header from '../../public/uikit/Header';
+import Text from '../../public/uikit/Text';
+import TextInput from '../../public/uikit/TextInput';
 
 import styles from '../Donate.mod.css';
 
@@ -93,7 +99,6 @@ class Incentives extends React.PureComponent {
   }
 
   addIncentive = (e) => {
-    e.preventDefault();
     this.props.addIncentive({
       bid: (this.state.newOptionValue || !this.state.selectedChoice) ? this.state.selected.id : this.state.selectedChoice,
       amount: (+this.state.amount),
@@ -157,109 +162,126 @@ class Incentives extends React.PureComponent {
     const addIncentiveDisabled = this.addIncentiveDisabled_();
     let slot = -1;
     return (
-      <div className={styles['incentives']} data-aid='incentives'>
-        <div className={styles['left']}>
-          <div className={styles['searches']}>
-            <input className={styles['search']} value={search} onChange={this.setValue('search')}
+      <React.Fragment>
+        <div className={styles.incentives} data-aid='incentives'>
+          <div className={styles.left}>
+            <input className={styles.search} value={search} onChange={this.setValue('search')}
                    placeholder='Filter Results'/>
-            <div className={styles['results']}>
-              {
-                this.matchResults_().map(result =>
-                  <div className={styles['result']} data-aid='result' key={result.id} onClick={this.select(result.id)}>
-                    <div className={styles['resultRun']}>{result.run}</div>
-                    <div className={styles['resultName']}>{result.name}</div>
-                  </div>
+            <div className={styles.results}>
+              { this.matchResults_().map(result =>
+                  <Clickable className={styles.result} data-aid='result' key={result.id} onClick={this.select(result.id)}>
+                    <Header size={Header.Sizes.H5} marginless oneline>{result.run}</Header>
+                    <Text size={Text.Sizes.SIZE_14} marginless oneline>{result.name}</Text>
+                  </Clickable>
                 )
               }
             </div>
           </div>
-          <div className={styles['assigned']}>
-            <div className={styles['header']}>YOUR INCENTIVES</div>
-            {currentIncentives.map((ci, k) => {
-                const incentive = incentives.find(i => i.id === ci.bid) || {name: errors[k].bid, id: `error-${k}`};
-                if (ci.bid) {
-                  slot++;
-                }
-                return (
-                  <div key={incentive.id} onClick={deleteIncentive(k)} className={styles['item']}>
-                    {ci.bid && bidsformempty && bidsformempty.map(i =>
-                      <input
-                        key={i.name.replace('__prefix__', slot)}
-                        id={i.id.replace('__prefix__', slot)}
-                        name={i.name.replace('__prefix__', slot)}
-                        type='hidden'
-                        value={ci[i.name.split('-').slice(-1)[0]] || ''}
-                      />
-                    )}
-                    <div className={cn(styles['runname'], styles['cubano'])}>{incentive.runname}</div>
-                    <div>{incentive.parent ? incentive.parent.name : incentive.name}</div>
-                    <div>Choice: {ci.customoptionname || incentive.name}</div>
-                    <div>Amount: ${ci.amount}</div>
-                    <button className={cn(styles['delete'], styles['cubano'])} type='button'>DELETE</button>
-                  </div>
-                );
-              }
-            )}
 
-          </div>
+          { selected
+            ? <div className={styles.right}>
+                <Header size={Header.Sizes.H4}>{selected.runname}</Header>
+                <Header size={Header.Sizes.H5}>{selected.name}</Header>
+                <Text size={Text.Sizes.SIZE_14}>{selected.description}</Text>
+
+                { (+selected.goal) &&
+                  <Text>Current Raised Amount: <span>${selected.amount} / ${selected.goal}</span></Text>
+                }
+
+                { choices.length
+                  ? <React.Fragment>
+                      <Header size={Header.Sizes.H5}>Choose an existing option:</Header>
+                      {choices.map(choice => (
+                        <div key={choice.id} className={styles.choice}>
+                          <input checked={selectedChoice === choice.id} type='checkbox'
+                                 onChange={() => this.setState({selectedChoice: choice.id, newOption: false})}
+                                 name={`choice-${choice.id}`}/>
+                          <label htmlFor={`choice-${choice.id}`}>{choice.name}</label>
+                          <span>${choice.amount}</span>
+                        </div>
+                      ))}
+                    </React.Fragment>
+                  : null
+                }
+
+                { selected.custom
+                  ? <React.Fragment>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={newOption}
+                          onChange={this.setChecked('newOption')}
+                          name="custom"
+                        />
+                        Nominate a new option!
+                      </label>
+
+                      <TextInput
+                        value={newOptionValue}
+                        disabled={!newOption}
+                        name="newOptionValue"
+                        label="New Option"
+                        onChange={this.setValue('newOptionValue')}
+                        maxLength={selected.maxlength}
+                      />
+                    </React.Fragment>
+                  : null
+                }
+
+                <TextInput
+                  name="new_amount"
+                  value={amount}
+                  type={TextInput.Types.NUMBER}
+                  label="Amount to put towards incentive"
+                  hint={<React.Fragment>You have <strong>${total}</strong> remaining.</React.Fragment>}
+                  leader="$"
+                  onChange={this.setValue('amount')}
+                  step={step}
+                  min={0}
+                  max={total}
+                />
+                <Button disabled={addIncentiveDisabled} onClick={this.addIncentive} fullwidth>
+                  Add
+                </Button>
+                { addIncentiveDisabled &&
+                  <label htmlFor='add' className='error'>{addIncentiveDisabled}</label>
+                }
+              </div>
+            : <div className={styles.right}>
+                <Text>You have ${total} remaining.</Text>
+              </div>
+          }
         </div>
-        {selected ?
-          <div className={styles['right']}>
-            <div className={cn(styles['runname'], styles['cubano'])}>{selected.runname}</div>
-            <div className={styles['name']}>{selected.name}</div>
-            <div className={styles['description']}>{selected.description}</div>
-            {(+selected.goal) ?
-              <div className={styles['goal']}>
-                <div>Current Raised Amount:</div>
-                <div>${selected.amount} / ${selected.goal}</div>
-              </div> :
-              null}
-            {selected.custom ?
-              <React.Fragment>
-                <div>
-                  <input type='checkbox' checked={newOption} onChange={this.setChecked('newOption')} name='custom'/>
-                  <label htmlFor='custom'>Nominate a new option!</label>
+
+        <Header size={Header.Sizes.H4}>Your Incentives</Header>
+        <div className={styles.assigned}>
+          { currentIncentives.map((ci, k) => {
+              const incentive = incentives.find(i => i.id === ci.bid) || {name: errors[k].bid, id: `error-${k}`};
+              if (ci.bid) slot++;
+              return (
+                <div key={incentive.id} onClick={deleteIncentive(k)} className={styles.incentive}>
+                  {ci.bid && bidsformempty && bidsformempty.map(i =>
+                    <input
+                      key={i.name.replace('__prefix__', slot)}
+                      id={i.id.replace('__prefix__', slot)}
+                      name={i.name.replace('__prefix__', slot)}
+                      type='hidden'
+                      value={ci[i.name.split('-').slice(-1)[0]] || ''}
+                    />
+                  )}
+                  <Header size={Header.Sizes.H4} marginless>{incentive.runname}</Header>
+                  <Text size={Text.Sizes.SIZE_14}>{incentive.parent ? incentive.parent.name : incentive.name}</Text>
+
+                  <Text size={Text.Sizes.SIZE_14} marginless>Choice: {ci.customoptionname || incentive.name}</Text>
+                  <Text size={Text.Sizes.SIZE_14} marginless>Amount: ${ci.amount}</Text>
+
+                  <button className={classNames(styles.delete, styles.cubano)} type='button'>Delete</button>
                 </div>
-                {selected.maxlength ?
-                  <div>({selected.maxlength} character limit)</div> :
-                  null}
-                <div>
-                  <input className={styles['underline']} value={newOptionValue} disabled={!newOption} type='text'
-                         name='newOptionValue' maxLength={selected.maxlength}
-                         onChange={this.setValue('newOptionValue')} placeholder='Enter Here'/>
-                </div>
-              </React.Fragment> :
-              null}
-            {choices.length ?
-              <React.Fragment>
-                <div>Choose an existing option:</div>
-                {choices.map(choice =>
-                  (<div key={choice.id} className={styles['choice']}>
-                    <input checked={selectedChoice === choice.id} type='checkbox'
-                           onChange={() => this.setState({selectedChoice: choice.id, newOption: false})}
-                           name={`choice-${choice.id}`}/>
-                    <label htmlFor={`choice-${choice.id}`}>{choice.name}</label>
-                    <span>${choice.amount}</span>
-                  </div>)
-                )}
-              </React.Fragment> :
-              null}
-            <div className={styles['amountCTA']}>Amount to put towards incentive:</div>
-            <div className={styles['amount']}>
-              <input className={styles['underline']} value={amount} name='new_amount' type='number' step={step} min={0}
-                     max={total}
-                     onChange={this.setValue('amount')} placeholder='Enter Here'/>
-              <label htmlFor='new_amount'>You have ${total} remaining.</label>
-            </div>
-            <div>
-              <button className={cn(styles['add'], styles['inverse'])} id='add' disabled={addIncentiveDisabled}
-                      onClick={this.addIncentive}>ADD
-              </button>
-              {addIncentiveDisabled && <label htmlFor='add' className='error'>{addIncentiveDisabled}</label>}
-            </div>
-          </div> :
-          <div className={styles['right']}>You have ${total} remaining.</div>}
-      </div>
+              );
+            })
+          }
+        </div>
+      </React.Fragment>
     );
   }
 }

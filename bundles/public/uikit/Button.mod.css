@@ -1,5 +1,6 @@
 .button {
   /* resets */
+  box-sizing: border-box;
   background: none;
   border: none;
   display: block;
@@ -85,4 +86,5 @@
 
 .isFullwidth {
   width: 100%;
+  margin: 0;
 }

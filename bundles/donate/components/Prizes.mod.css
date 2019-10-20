@@ -16,6 +16,7 @@
 
 .prize {
   padding: 8px 16px;
+
   &:nth-child(odd) {
     background-color: var(--background-tertiary);
   }

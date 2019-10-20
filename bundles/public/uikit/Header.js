@@ -23,6 +23,7 @@ const Header = (props) => {
     size = Sizes.H2,
     color = Colors.NORMAL,
     marginless=false,
+    oneline=false,
     className,
     children
   } = props;
@@ -34,6 +35,7 @@ const Header = (props) => {
           size,
           className,
           {
+            [styles.oneline]: oneline,
             [styles.marginless]: marginless
           }
         )}>

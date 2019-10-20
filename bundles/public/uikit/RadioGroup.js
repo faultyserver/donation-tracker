@@ -22,7 +22,7 @@ const RadioItem = (props) => {
   }, [onSelect]);
 
   return (
-    <button className={classNames(styles.radioItem, {[styles.selectedItem]:selected})} onClick={handleClick}>
+    <button className={classNames(styles.radioItem, {[styles.selectedItem]: selected})} onClick={handleClick}>
       {name}
     </button>
   );
