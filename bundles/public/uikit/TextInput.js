@@ -40,6 +40,7 @@ const TextInput = (props) => {
     <InputWrapper
         className={className}
         label={label}
+        name={name}
         hint={hint}
         marginless={marginless}
         leader={leader}

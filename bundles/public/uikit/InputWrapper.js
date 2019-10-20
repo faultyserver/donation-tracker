@@ -13,6 +13,7 @@ const InputWrapperSizes = {
 const InputWrapper = (props) => {
   const {
     label,
+    name,
     hint,
     leader,
     trailer,
@@ -25,10 +26,8 @@ const InputWrapper = (props) => {
   return (
     <div className={classNames(styles.container, size, className)}>
       { label != null &&
-        <label htmlFor={name}>
-          <Text className={styles.label} size={Text.Sizes.SIZE_14} marginless>
-            {label}
-          </Text>
+        <label className={styles.label} htmlFor={name}>
+          {label}
         </label>
       }
       <div className={styles.input}>

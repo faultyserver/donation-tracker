@@ -76,7 +76,7 @@ class Donate extends React.PureComponent {
   };
 
   state = {
-    showIncentives: this.props.initialIncentives.length !== 0,
+    hasIncentives: this.props.initialIncentives.length !== 0,
     currentIncentives: this.props.initialIncentives || [],
     requestedalias: this.props.initialForm.requestedalias || '',
     requestedemail: this.props.initialForm.requestedemail || '',
@@ -135,7 +135,7 @@ class Donate extends React.PureComponent {
     const {
       amount,
       currentIncentives,
-      showIncentives,
+      hasIncentives,
     } = this.state;
     const {
       minimumDonation,
@@ -147,7 +147,7 @@ class Donate extends React.PureComponent {
     if (this.sumIncentives_() > amount) {
       return 'Total bid amount cannot exceed donation amount.';
     }
-    if (showIncentives && this.sumIncentives_() < amount) {
+    if (hasIncentives && this.sumIncentives_() < amount) {
       return 'Total donation amount not allocated.';
     }
     if (amount < minimumDonation) {
@@ -171,7 +171,7 @@ class Donate extends React.PureComponent {
 
   render() {
     const {
-      showIncentives,
+      hasIncentives,
       currentIncentives,
       requestedalias,
       requestedemail,
@@ -201,10 +201,10 @@ class Donate extends React.PureComponent {
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
-        <section className={styles.section}>
-          <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
-          <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {event.receivername}.</Text>
+        <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
+        <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {event.receivername}.</Text>
 
+        <section className={styles.section}>
           <input type="hidden" name="requestedvisibility" value={requestedalias ? 'ALIAS' : 'ANON'}/>
           <TextInput
             name="requestedalias"
@@ -227,9 +227,7 @@ class Donate extends React.PureComponent {
             size={TextInput.Sizes.LARGE}
             onChange={this.setValue('requestedemail')}
           />
-        </section>
 
-        <section className={styles.section}>
           <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {event.receivername}?</Text>
           <div className={styles.emailButtons}>
             <input type="hidden" name="requestedsolicitemail" value={requestedsolicitemail}/>
@@ -240,9 +238,7 @@ class Donate extends React.PureComponent {
               onChange={this.setEmail}
             />
           </div>
-        </section>
 
-        <section className={styles.section}>
           <TextInput
             name="amount"
             value={amount}
@@ -278,10 +274,11 @@ class Donate extends React.PureComponent {
         }
 
         <section className={styles.section}>
-          <Header size={Header.Sizes.H3}>Leave a Comment?</Header>
+          <Header size={Header.Sizes.H3}></Header>
           <TextInput
             name="comment"
             value={comment}
+            label="Leave a Comment?"
             placeholder="Enter Comment Here"
             hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
             multiline
@@ -291,30 +288,30 @@ class Donate extends React.PureComponent {
           />
         </section>
 
-        <div className={styles.incentivesCTA}>
+        <section className={styles.section}>
           <Header size={Header.Sizes.H3}>Donation Incentives</Header>
-          <Text>Donation incentives can be used to add bonus runs to the schedule or influence choices by runners. Do you wish to put your donation towards an incentive?</Text>
+          <Text>Donation incentives can be used to add bonus runs to the schedule or influence choices by runners. Would you like to put your donation towards an incentive?</Text>
 
           <div className={styles.incentivesButtons}>
             <Button
-                disabled={showIncentives}
+                disabled={hasIncentives}
                 look={Button.Looks.FILLED}
                 id='show_incentives'
-                onClick={() => this.setState({showIncentives: true})}>
+                onClick={() => this.setState({hasIncentives: true})}>
               Yes!
             </Button>
             <Button
                 id='skip_incentives'
                 look={Button.Looks.FILLED}
-                disabled={showIncentives || this.finishDisabled_()}
+                disabled={hasIncentives || this.finishDisabled_()}
                 type='submit'>
               No, Skip Incentives
             </Button>
           </div>
-          {!showIncentives && finishDisabled && <label htmlFor='skip' className='error'>{finishDisabled}</label>}
-        </div>
+          {!hasIncentives && finishDisabled && <label htmlFor='skip' className='error'>{finishDisabled}</label>}
+        </section>
 
-        { showIncentives
+        { hasIncentives
           ? <React.Fragment>
               <Incentives
                 step={step}

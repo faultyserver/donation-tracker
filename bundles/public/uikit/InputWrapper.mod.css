@@ -5,7 +5,12 @@
 }
 
 .label {
+  margin: 0;
   margin-left: 8px;
+  line-height: 1;
+  font-weight: 500;
+  font-family: var(--font-primary);
+  font-size: 14px;
 }
 
 .input {
