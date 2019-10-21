@@ -4,12 +4,14 @@ import _ from 'lodash';
 import classNames from 'classnames';
 
 import Button from '../../public/uikit/Button';
+import Checkbox from '../../public/uikit/Checkbox';
 import Clickable from '../../public/uikit/Clickable';
 import Header from '../../public/uikit/Header';
+import ProgressBar from '../../public/uikit/ProgressBar';
 import Text from '../../public/uikit/Text';
 import TextInput from '../../public/uikit/TextInput';
 
-import styles from '../Donate.mod.css';
+import styles from './Incentives.mod.css';
 
 export const IncentiveProps = PropTypes.shape({
   id: PropTypes.number.isRequired,
@@ -157,19 +159,29 @@ class Incentives extends React.PureComponent {
       currentIncentives,
       errors,
       incentives,
+      className,
       deleteIncentive,
     } = this.props;
     const addIncentiveDisabled = this.addIncentiveDisabled_();
     let slot = -1;
+
     return (
-      <React.Fragment>
+      <div className={className}>
         <div className={styles.incentives} data-aid='incentives'>
           <div className={styles.left}>
-            <input className={styles.search} value={search} onChange={this.setValue('search')}
-                   placeholder='Filter Results'/>
+            <TextInput
+              value={search}
+              onChange={this.setValue('search')}
+              placeholder="Filter Results"
+              marginless
+            />
             <div className={styles.results}>
               { this.matchResults_().map(result =>
-                  <Clickable className={styles.result} data-aid='result' key={result.id} onClick={this.select(result.id)}>
+                  <Clickable
+                      className={classNames(styles.result, {[styles.resultSelected]: selected && selected.id === result.id})}
+                      data-aid="result"
+                      key={result.id}
+                      onClick={this.select(result.id)}>
                     <Header size={Header.Sizes.H5} marginless oneline>{result.run}</Header>
                     <Text size={Text.Sizes.SIZE_14} marginless oneline>{result.name}</Text>
                   </Clickable>
@@ -188,46 +200,6 @@ class Incentives extends React.PureComponent {
                   <Text>Current Raised Amount: <span>${selected.amount} / ${selected.goal}</span></Text>
                 }
 
-                { choices.length
-                  ? <React.Fragment>
-                      <Header size={Header.Sizes.H5}>Choose an existing option:</Header>
-                      {choices.map(choice => (
-                        <div key={choice.id} className={styles.choice}>
-                          <input checked={selectedChoice === choice.id} type='checkbox'
-                                 onChange={() => this.setState({selectedChoice: choice.id, newOption: false})}
-                                 name={`choice-${choice.id}`}/>
-                          <label htmlFor={`choice-${choice.id}`}>{choice.name}</label>
-                          <span>${choice.amount}</span>
-                        </div>
-                      ))}
-                    </React.Fragment>
-                  : null
-                }
-
-                { selected.custom
-                  ? <React.Fragment>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={newOption}
-                          onChange={this.setChecked('newOption')}
-                          name="custom"
-                        />
-                        Nominate a new option!
-                      </label>
-
-                      <TextInput
-                        value={newOptionValue}
-                        disabled={!newOption}
-                        name="newOptionValue"
-                        label="New Option"
-                        onChange={this.setValue('newOptionValue')}
-                        maxLength={selected.maxlength}
-                      />
-                    </React.Fragment>
-                  : null
-                }
-
                 <TextInput
                   name="new_amount"
                   value={amount}
@@ -240,7 +212,45 @@ class Incentives extends React.PureComponent {
                   min={0}
                   max={total}
                 />
-                <Button disabled={addIncentiveDisabled} onClick={this.addIncentive} fullwidth>
+
+                { choices.length
+                  ? choices.map(choice => (
+                      <Checkbox
+                          key={choice.id}
+                          name={`choice-${choice.id}`}
+                          checked={selectedChoice === choice.id}
+                          contentClassName={styles.choiceLabel}
+                          look={Checkbox.Looks.DENSE}
+                          onChange={() => this.setState({selectedChoice: choice.id, newOption: false})}>
+                        <Checkbox.Header>{choice.name}</Checkbox.Header>
+                        <span className={styles.choiceAmount}>${choice.amount}</span>
+                      </Checkbox>
+                    ))
+                  : null
+                }
+
+                { selected.custom
+                  ? <React.Fragment>
+                      <Checkbox
+                          name="custom"
+                          label="Nominate a new option!"
+                          checked={newOption}
+                          look={Checkbox.Looks.NORMAL}
+                          onChange={this.setChecked('newOption')}>
+                        <TextInput
+                          value={newOptionValue}
+                          disabled={!newOption}
+                          name="newOptionValue"
+                          placeholder="New Option"
+                          onChange={this.setValue('newOptionValue')}
+                          maxLength={selected.maxlength}
+                        />
+                      </Checkbox>
+                    </React.Fragment>
+                  : null
+                }
+
+                <Button disabled={addIncentiveDisabled} fullwidth onClick={this.addIncentive}>
                   Add
                 </Button>
                 { addIncentiveDisabled &&
@@ -281,7 +291,7 @@ class Incentives extends React.PureComponent {
             })
           }
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

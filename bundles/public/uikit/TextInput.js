@@ -20,6 +20,7 @@ const TextInput = (props) => {
     hint,
     placeholder,
     multiline=false,
+    disabled=false,
     size=InputWrapper.Sizes.NORMAL,
     type=TextInputTypes.TEXT,
     leader,
@@ -38,7 +39,7 @@ const TextInput = (props) => {
 
   return (
     <InputWrapper
-        className={className}
+        className={classNames(className, {[styles.disabled]: disabled})}
         label={label}
         name={name}
         hint={hint}
@@ -52,6 +53,7 @@ const TextInput = (props) => {
         type={type}
         name={name}
         value={value}
+        disabled={disabled}
         onChange={onChange}
         {...extraProps}
       />

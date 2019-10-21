@@ -76,7 +76,7 @@ class Donate extends React.PureComponent {
   };
 
   state = {
-    hasIncentives: this.props.initialIncentives.length !== 0,
+    showIncentives: this.props.initialIncentives.length !== 0,
     currentIncentives: this.props.initialIncentives || [],
     requestedalias: this.props.initialForm.requestedalias || '',
     requestedemail: this.props.initialForm.requestedemail || '',
@@ -135,7 +135,7 @@ class Donate extends React.PureComponent {
     const {
       amount,
       currentIncentives,
-      hasIncentives,
+      showIncentives,
     } = this.state;
     const {
       minimumDonation,
@@ -147,7 +147,7 @@ class Donate extends React.PureComponent {
     if (this.sumIncentives_() > amount) {
       return 'Total bid amount cannot exceed donation amount.';
     }
-    if (hasIncentives && this.sumIncentives_() < amount) {
+    if (showIncentives && this.sumIncentives_() < amount) {
       return 'Total donation amount not allocated.';
     }
     if (amount < minimumDonation) {
@@ -171,7 +171,7 @@ class Donate extends React.PureComponent {
 
   render() {
     const {
-      hasIncentives,
+      showIncentives,
       currentIncentives,
       requestedalias,
       requestedemail,
@@ -214,6 +214,7 @@ class Donate extends React.PureComponent {
             size={TextInput.Sizes.LARGE}
             onChange={this.setValue('requestedalias')}
             maxLength={32}
+            autoFocus
           />
           <TextInput
             name="requestedemail"
@@ -240,6 +241,18 @@ class Donate extends React.PureComponent {
           </div>
 
           <TextInput
+            name="comment"
+            value={comment}
+            label="Leave a Comment?"
+            placeholder="Enter Comment Here"
+            hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
+            multiline
+            onChange={this.setValue('comment')}
+            maxLength={5000}
+            rows={5}
+          />
+
+          <TextInput
             name="amount"
             value={amount}
             label="Amount"
@@ -259,7 +272,6 @@ class Donate extends React.PureComponent {
                   className={styles.amountPreset}
                   key={amount}
                   look={Button.Looks.OUTLINED}
-                  // size={Button.Sizes.SMALL}
                   onClick={this.setAmount(amount)}>
                 ${amount}
               </Button>
@@ -274,46 +286,12 @@ class Donate extends React.PureComponent {
         }
 
         <section className={styles.section}>
-          <Header size={Header.Sizes.H3}></Header>
-          <TextInput
-            name="comment"
-            value={comment}
-            label="Leave a Comment?"
-            placeholder="Enter Comment Here"
-            hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
-            multiline
-            onChange={this.setValue('comment')}
-            maxLength={5000}
-            rows={5}
-          />
-        </section>
+          <Header size={Header.Sizes.H3}>Incentives</Header>
+          <Text>Donation incentives can be used to add bonus runs to the schedule and influence choices by runners. Would you like to put your donation towards an incentive?</Text>
 
-        <section className={styles.section}>
-          <Header size={Header.Sizes.H3}>Donation Incentives</Header>
-          <Text>Donation incentives can be used to add bonus runs to the schedule or influence choices by runners. Would you like to put your donation towards an incentive?</Text>
-
-          <div className={styles.incentivesButtons}>
-            <Button
-                disabled={hasIncentives}
-                look={Button.Looks.FILLED}
-                id='show_incentives'
-                onClick={() => this.setState({hasIncentives: true})}>
-              Yes!
-            </Button>
-            <Button
-                id='skip_incentives'
-                look={Button.Looks.FILLED}
-                disabled={hasIncentives || this.finishDisabled_()}
-                type='submit'>
-              No, Skip Incentives
-            </Button>
-          </div>
-          {!hasIncentives && finishDisabled && <label htmlFor='skip' className='error'>{finishDisabled}</label>}
-        </section>
-
-        { hasIncentives
-          ? <React.Fragment>
-              <Incentives
+          { showIncentives
+            ? <Incentives
+                className={styles.incentives}
                 step={step}
                 errors={formErrors.bidsform}
                 incentives={incentives}
@@ -322,18 +300,27 @@ class Donate extends React.PureComponent {
                 addIncentive={this.addIncentive_}
                 total={(amount || 0) - this.sumIncentives_()}
               />
-              <div className={styles.finishArea}>
-                <button
-                    id='finish'
-                    disabled={this.finishDisabled_()}
-                    type='submit'>
-                  Finish
-                </button>
-                {finishDisabled && <label htmlFor='finish' className='error'>{finishDisabled}</label>}
-              </div>
-            </React.Fragment>
-          : null
-        }
+            : <Button
+                  disabled={showIncentives}
+                  look={Button.Looks.OUTLINED}
+                  fullwidth
+                  onClick={() => this.setState({showIncentives: true})}>
+                Add Incentives
+              </Button>
+          }
+        </section>
+
+        <section className={styles.section}>
+          <Header size={Header.Sizes.H3}>Donate!</Header>
+          {finishDisabled && <Text>{finishDisabled}</Text>}
+          <Button
+              size={Button.Sizes.LARGE}
+              disabled={this.finishDisabled_()}
+              fullwidth
+              type='submit'>
+            Finish
+          </Button>
+        </section>
 
         {bidsformmanagement && bidsformmanagement.map(i => <input key={i.id} id={i.id} name={i.name}
                                                                   value={i.name.includes('TOTAL_FORMS') ? currentIncentives.filter(ci => !!ci.bid).length : i.value}

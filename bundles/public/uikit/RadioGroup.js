@@ -6,6 +6,7 @@ import styles from './RadioGroup.mod.css';
 const RadioGroupLooks = {
   INLINE: styles.lookInline,
   VERTICAL: styles.lookVertical,
+  CUSTOM: styles.lookCustom,
 };
 
 const RadioItem = (props) => {
@@ -35,6 +36,7 @@ const RadioGroup = (props) => {
     value,
     look=RadioGroupLooks.INLINE,
     onChange,
+    children: Option = RadioItem,
     className,
   } = props;
 
@@ -43,15 +45,16 @@ const RadioGroup = (props) => {
   }, [onChange]);
 
   return (
-    <div className={classNames(styles.container, look, className)}>
-      {options.map((option) =>
-        <RadioItem
-          {...option}
-          key={option.value}
-          selected={value === option.value}
-          onSelect={handleClick}
-        />
-      )}
+    <div className={classNames(look, className)}>
+      { options.map((option) =>
+          <Option
+            {...option}
+            key={option.value}
+            selected={value === option.value}
+            onSelect={handleClick}
+          />
+        )
+      }
     </div>
   );
 };

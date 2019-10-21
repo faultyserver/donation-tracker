@@ -1,5 +1,5 @@
 .donationForm {
-  max-width: 640px;
+  max-width: 620px;
   padding: 32px 0;
   margin: auto;
 }
@@ -23,99 +23,6 @@
   margin: 0 8px 8px 8px;
 }
 
-.incentivesButtons {
-  display: flex;
-  justify-content: center;
-}
-
 .incentives {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
-  width: 100%;
-
-  & .left {
-    flex: 1 0 220px;
-    margin-right: 16px;
-    min-height: 240px;
-  }
-
-  & .right {
-    flex: 1 0 360px;
-  }
-}
-
-.search {
-  line-height: 21px;
-  font-size: 18px;
-  width: calc(100%);
-  margin-top: 2px;
-  padding: 4px 8px;
-  border: none;
-  border-bottom: 1px solid #5E0324;
-}
-
-.results {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.result {
-  padding: 8px 16px;
-
-  &:nth-child(odd) {
-    background-color: var(--background-tertiary);
-  }
-}
-
-
-.assigned {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 16px;
-
-  & .incentive {
-    flex: 1 1 240px;
-    border-radius: 4px;
-    border: var(--border-primary);
-    padding: 8px;
-    position: relative;
-
-    & .delete {
-      visibility: hidden;
-      position: absolute;
-      top: 30%;
-      left: 60px;
-    }
-
-    &:hover {
-      background-color: rgba(94, 3, 36, 0.75);
-
-      & .delete {
-        visibility: initial;
-      }
-    }
-  }
-}
-
-.choice {
-  width: 100%;
-  padding: 4px 12px;
-  display: flex;
-  align-items: center;
-
-  & label {
-    margin: 0;
-    flex-grow: 1;
-    padding-left: 4px;
-  }
-
-  &:nth-child(even) {
-    background-color: rgba(94, 3, 36, 0.1);
-  }
-}
-
-.amountCTA {
-  margin-top: 18px;
+  margin-top: 16px;
 }

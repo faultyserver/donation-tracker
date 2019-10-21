@@ -11,13 +11,11 @@
 .prizeList {
   flex: 1 0 260px;
   border-left: var(--border-primary);
+  border-right: var(--border-primary);
   overflow-y: scroll;
 }
 
 .prize {
   padding: 8px 16px;
-
-  &:nth-child(odd) {
-    background-color: var(--background-tertiary);
-  }
+  border-bottom: var(--border-secondary)
 }

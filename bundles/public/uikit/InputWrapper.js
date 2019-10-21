@@ -24,7 +24,7 @@ const InputWrapper = (props) => {
   } = props;
 
   return (
-    <div className={classNames(styles.container, size, className)}>
+    <div className={classNames(styles.container, size, className, {[styles.marginless]: marginless})}>
       { label != null &&
         <label className={styles.label} htmlFor={name}>
           {label}
