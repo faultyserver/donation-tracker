@@ -1,13 +1,25 @@
 import _ from 'lodash';
 
 const defaultState = {
+  availableIncentives: {},
   bids: {},
 };
 
 const actions = {
-  'donate/CREATE_BID': (state, {data}) => {
+  'incentives/LOAD_INCENTIVES': (state, {data}) => {
+    const {incentives} = data;
+    const incentivesById = _.keyBy(incentives, 'id');
+
+    return {
+      ...state,
+      availableIncentives: incentivesById,
+    };
+  },
+
+  'donate/CREATE_INCENTIVE_BID': (state, {data}) => {
     const {bid} = data;
     const newId = _.uniqueId('newBid');
+
     return {
       ...state,
       bids: {
@@ -17,12 +29,12 @@ const actions = {
     };
   },
 
-  'donate/DELETE_BID': (state, {data}) => {
+  'donate/DELETE_INCENTIVE_BID': (state, {data}) => {
     const {bidId} = data;
     const {
-      [bidId]: _deletedBid,
+      [bidId]: _removedBid,
       ...filteredBids,
-    } = state.bids;
+    } = state;
 
     return {
       ...state,

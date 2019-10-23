@@ -99,10 +99,6 @@ class Donate extends React.PureComponent {
     }
   };
 
-  setEmail = (requestedsolicitemail) => {
-    this.setState({requestedsolicitemail});
-  };
-
   addIncentive_ = (incentive) => {
     const {
       currentIncentives,
@@ -131,7 +127,7 @@ class Donate extends React.PureComponent {
     return this.state.currentIncentives.reduce((sum, ci) => ci.bid ? sum + (+ci.amount) : 0, 0);
   }
 
-  finishDisabled_() {
+  canSubmit_() {
     const {
       amount,
       currentIncentives,
@@ -196,7 +192,7 @@ class Donate extends React.PureComponent {
       onSubmit,
     } = this.props;
     // TODO: show more form errors
-    const finishDisabled = this.finishDisabled_();
+    const canSubmit = this.canSubmit_();
 
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
@@ -236,7 +232,7 @@ class Donate extends React.PureComponent {
               className={styles.emailOptin}
               options={EMAIL_OPTIONS}
               value={requestedsolicitemail}
-              onChange={this.setEmail}
+              onChange={(value) => this.setState({requestedsolicitemail: value})}
             />
           </div>
 
@@ -312,12 +308,12 @@ class Donate extends React.PureComponent {
 
         <section className={styles.section}>
           <Header size={Header.Sizes.H3}>Donate!</Header>
-          {finishDisabled && <Text>{finishDisabled}</Text>}
+          {canSubmit && <Text>{canSubmit}</Text>}
           <Button
               size={Button.Sizes.LARGE}
-              disabled={this.finishDisabled_()}
+              disabled={canSubmit}
               fullwidth
-              type='submit'>
+              type="submit">
             Finish
           </Button>
         </section>

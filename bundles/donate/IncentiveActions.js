@@ -1,6 +1,6 @@
 export function createBid(bid) {
   return {
-    type: 'donate/CREATE_BID',
+    type: 'donate/CREATE_INCENTIVE_BID',
     data: {
       bid
     }
@@ -9,7 +9,7 @@ export function createBid(bid) {
 
 export function deleteBid(bidId) {
   return {
-    type: 'donate/DELETE_BID',
+    type: 'donate/DELETE_INCENTIVE_BID',
     data: {
       bidId
     }

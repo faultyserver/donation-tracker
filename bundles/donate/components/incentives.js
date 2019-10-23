@@ -10,6 +10,7 @@ import Header from '../../public/uikit/Header';
 import ProgressBar from '../../public/uikit/ProgressBar';
 import Text from '../../public/uikit/Text';
 import TextInput from '../../public/uikit/TextInput';
+import IncentiveForm from './IncentiveForm';
 
 import styles from './Incentives.mod.css';
 
@@ -85,21 +86,6 @@ class Incentives extends React.PureComponent {
     return _.uniqBy(incentives, i => `${i.run}--${i.name}`);
   }
 
-  addIncentiveDisabled_() {
-    if (this.state.amount <= 0) {
-      return 'Amount must be greater than 0.';
-    } else if (this.state.amount > this.props.total) {
-      return `Amount cannot be greater than $${this.props.total}.`;
-    } else if (this.state.selected && !+this.state.selected.goal) {
-      if (this.state.newOption && !this.state.newOptionValue) {
-        return 'Must enter new option.';
-      } else if (!this.state.newOption && !this.state.selectedChoice) {
-        return 'Must pick an option.';
-      }
-    }
-    return null;
-  }
-
   addIncentive = (e) => {
     this.props.addIncentive({
       bid: (this.state.newOptionValue || !this.state.selectedChoice) ? this.state.selected.id : this.state.selectedChoice,
@@ -162,7 +148,7 @@ class Incentives extends React.PureComponent {
       className,
       deleteIncentive,
     } = this.props;
-    const addIncentiveDisabled = this.addIncentiveDisabled_();
+    const amountFloat = parseFloat(amount);
     let slot = -1;
 
     return (
@@ -190,77 +176,15 @@ class Incentives extends React.PureComponent {
             </div>
           </div>
 
-          { selected
-            ? <div className={styles.right}>
-                <Header size={Header.Sizes.H4}>{selected.runname}</Header>
-                <Header size={Header.Sizes.H5}>{selected.name}</Header>
-                <Text size={Text.Sizes.SIZE_14}>{selected.description}</Text>
-
-                { (+selected.goal) &&
-                  <Text>Current Raised Amount: <span>${selected.amount} / ${selected.goal}</span></Text>
-                }
-
-                <TextInput
-                  name="new_amount"
-                  value={amount}
-                  type={TextInput.Types.NUMBER}
-                  label="Amount to put towards incentive"
-                  hint={<React.Fragment>You have <strong>${total}</strong> remaining.</React.Fragment>}
-                  leader="$"
-                  onChange={this.setValue('amount')}
-                  step={step}
-                  min={0}
-                  max={total}
-                />
-
-                { choices.length
-                  ? choices.map(choice => (
-                      <Checkbox
-                          key={choice.id}
-                          name={`choice-${choice.id}`}
-                          checked={selectedChoice === choice.id}
-                          contentClassName={styles.choiceLabel}
-                          look={Checkbox.Looks.DENSE}
-                          onChange={() => this.setState({selectedChoice: choice.id, newOption: false})}>
-                        <Checkbox.Header>{choice.name}</Checkbox.Header>
-                        <span className={styles.choiceAmount}>${choice.amount}</span>
-                      </Checkbox>
-                    ))
-                  : null
-                }
-
-                { selected.custom
-                  ? <React.Fragment>
-                      <Checkbox
-                          name="custom"
-                          label="Nominate a new option!"
-                          checked={newOption}
-                          look={Checkbox.Looks.NORMAL}
-                          onChange={this.setChecked('newOption')}>
-                        <TextInput
-                          value={newOptionValue}
-                          disabled={!newOption}
-                          name="newOptionValue"
-                          placeholder="New Option"
-                          onChange={this.setValue('newOptionValue')}
-                          maxLength={selected.maxlength}
-                        />
-                      </Checkbox>
-                    </React.Fragment>
-                  : null
-                }
-
-                <Button disabled={addIncentiveDisabled} fullwidth onClick={this.addIncentive}>
-                  Add
-                </Button>
-                { addIncentiveDisabled &&
-                  <label htmlFor='add' className='error'>{addIncentiveDisabled}</label>
-                }
-              </div>
-            : <div className={styles.right}>
-                <Text>You have ${total} remaining.</Text>
-              </div>
-          }
+          <IncentiveForm
+            className={styles.right}
+            selected={selected}
+            choices={choices}
+            selectedChoice={selectedChoice}
+            amount={amount}
+            step={step}
+            total={total}
+          />
         </div>
 
         <Header size={Header.Sizes.H4}>Your Incentives</Header>

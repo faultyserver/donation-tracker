@@ -34,8 +34,8 @@ const TextInput = (props) => {
   const Tag = multiline ? 'textarea' : 'input';
 
   const maxLength = props.maxLength;
-  const usedLength = value.length;
-  const invalidLength = usedLength >= maxLength;
+  const usedLength = value ? value.length : 0;
+  const invalidLength = maxLength != null && usedLength >= maxLength;
 
   return (
     <InputWrapper

@@ -5,19 +5,20 @@
   align-items: stretch;
   width: 100%;
   margin-bottom: 16px;
+  border: var(--border-primary);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .left {
   flex: 1 0 220px;
-  min-height: 240px;
-  border-left: var(--border-primary);
+  min-height: 260px;
   border-right: var(--border-primary);
+  border-bottom: var(--border-primary);
 }
 
 .right {
   flex: 1 0 360px;
-  padding: 16px;
-  background-color: var(--background-secondary);
 }
 
 
@@ -40,18 +41,6 @@
   &:hover {
     background-color: var(--background-secondary);
   }
-}
-
-
-.choiceLabel {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
-}
-
-.choiceAmount {
-  display: block;
 }
 
 

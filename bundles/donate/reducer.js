@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
-import DonateReducer from './DonateReducer';
+import IncentivesReducer from './IncentivesReducer';
 
 const combinedReducer = combineReducers({
-  donate: DonateReducer,
+  incentives: IncentivesReducer,
 });
 
 export const store = createStore(combinedReducer, applyMiddleware(thunk));
