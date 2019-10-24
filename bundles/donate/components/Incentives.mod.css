@@ -43,33 +43,6 @@
   }
 }
 
-
-.assigned {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 16px;
+.bids {
   margin-top: 16px;
-
-  & .incentive {
-    flex: 1 1 240px;
-    border-radius: 4px;
-    border: var(--border-primary);
-    padding: 8px;
-    position: relative;
-
-    & .delete {
-      visibility: hidden;
-      position: absolute;
-      top: 30%;
-      left: 60px;
-    }
-
-    &:hover {
-      background-color: rgba(94, 3, 36, 0.75);
-
-      & .delete {
-        visibility: initial;
-      }
-    }
-  }
 }

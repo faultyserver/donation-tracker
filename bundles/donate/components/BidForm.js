@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import classNames from 'classnames';
 
 import Button from '../../public/uikit/Button';
@@ -8,34 +9,40 @@ import ProgressBar from '../../public/uikit/ProgressBar';
 import Text from '../../public/uikit/Text';
 import TextInput from '../../public/uikit/TextInput';
 import * as IncentiveActions from '../IncentiveActions';
+import * as IncentiveStore from '../IncentiveStore';
 import * as IncentiveUtils from '../IncentiveUtils';
 
-import styles from './IncentiveForm.mod.css';
+import styles from './BidForm.mod.css';
 
-const IncentiveForm = (props) => {
+const BidForm = (props) => {
   const {
-    selected,
-    choices,
-    selectedChoice,
+    incentiveId,
     step,
     total,
     className,
   } = props;
 
+  const dispatch = useDispatch();
+
+  const {incentive, bidChoices} = useSelector((state) => ({
+    incentive: IncentiveStore.getIncentive(state, incentiveId),
+    bidChoices: IncentiveStore.getChildIncentives(state, incentiveId),
+  }));
+
   const [allocatedAmount, setAllocatedAmount] = React.useState(total);
   const [selectedChoiceId, setSelectedChoiceId] = React.useState(null);
-  const [newChoiceSelected, setNewChoiceSelected] = React.useState(false);
-  const [newChoice, setNewChoice] = React.useState("");
+  const [customOptionSelected, setCustomOptionSelected] = React.useState(false);
+  const [customOption, setCustomOption] = React.useState("");
 
-  const [incentiveIsValid, incentiveErrorText] = React.useMemo(() => (
+  const [bidIsValid, bidErrorText] = React.useMemo(() => (
     IncentiveUtils.validateBid({
       amount: allocatedAmount,
       total,
-      selected,
+      incentive,
       choice: selectedChoiceId,
-      newChoice,
+      customOption,
     })
-  ), [allocatedAmount, total, selected, newChoice]);
+  ), [allocatedAmount, total, incentive, customOption]);
 
 
   const handleAmountChange = React.useCallback((e) => {
@@ -44,24 +51,23 @@ const IncentiveForm = (props) => {
 
   const handleSelectNewOption = React.useCallback((e) => {
     setSelectedChoiceId(null);
-    setNewChoiceSelected(true);
+    setCustomOptionSelected(true);
   }, []);
 
   const handleNewOptionChange = React.useCallback((e) => {
-    setNewChoice(e.currentTarget.value);
+    setCustomOption(e.currentTarget.value);
   }, []);
 
   const handleSubmitBid = React.useCallback(() => {
-    IncentiveActions.createBid({
-      incentiveId: selected.id,
+    dispatch(IncentiveActions.createBid({
+      incentiveId: selectedChoiceId != null ? selectedChoiceId : incentive.id,
+      customOption,
       amount: allocatedAmount,
-      choiceId: selectedChoiceId,
-      newChoice: newChoice,
-    });
-  }, [selected, allocatedAmount, selectedChoiceId, newChoice]);
+    }));
+  }, [dispatch, incentive, selectedChoiceId, allocatedAmount, customOption]);
 
 
-  if(selected == null) {
+  if(incentive == null) {
     return (
       <div className={classNames(styles.container, className)}>
         <Text>You have ${total} remaining.</Text>
@@ -69,25 +75,22 @@ const IncentiveForm = (props) => {
     );
   }
 
-  const selectedAmountFloat = parseFloat(selected.amount);
-  const selectedGoalFloat = parseFloat(selected.goal);
-  const goalProgress = selectedAmountFloat / selectedGoalFloat * 100;
+  const goalProgress = incentive.amount / incentive.goal * 100;
 
   return (
     <div className={classNames(styles.container, className)}>
-      <Header size={Header.Sizes.H4}>{selected.runname}</Header>
-      <Header size={Header.Sizes.H5}>{selected.name}</Header>
-      <Text size={Text.Sizes.SIZE_14}>{selected.description}</Text>
+      <Header size={Header.Sizes.H4}>{incentive.runname}</Header>
+      <Header size={Header.Sizes.H5}>{incentive.name}</Header>
+      <Text size={Text.Sizes.SIZE_14}>{incentive.description}</Text>
 
-      { (+selected.goal) &&
+      { incentive.goal &&
         <React.Fragment>
           <ProgressBar className={styles.progressBar} progress={goalProgress} />
-          <Text marginless>Current Raised Amount: <span>${selected.amount} / ${selected.goal}</span></Text>
+          <Text marginless>Current Raised Amount: <span>${incentive.amount} / ${incentive.goal}</span></Text>
         </React.Fragment>
       }
 
       <TextInput
-        name="new_amount"
         value={allocatedAmount}
         type={TextInput.Types.NUMBER}
         label="Amount to put towards incentive"
@@ -99,11 +102,10 @@ const IncentiveForm = (props) => {
         max={total}
       />
 
-      { choices && choices.length
-        ? choices.map(choice => (
+      { bidChoices.length > 0
+        ? bidChoices.map(choice => (
             <Checkbox
                 key={choice.id}
-                name={`choice-${choice.id}`}
                 checked={selectedChoiceId === choice.id}
                 contentClassName={styles.choiceLabel}
                 look={Checkbox.Looks.DENSE}
@@ -115,29 +117,27 @@ const IncentiveForm = (props) => {
         : null
       }
 
-      { selected.custom
+      { incentive.custom
         ? <Checkbox
-              name="custom"
               label="Nominate a new option!"
-              checked={newChoiceSelected}
+              checked={customOptionSelected}
               look={Checkbox.Looks.NORMAL}
               onChange={handleSelectNewOption}>
             <TextInput
-              value={newChoice}
-              disabled={!newChoiceSelected}
-              name="newOptionValue"
+              value={customOption}
+              disabled={!customOptionSelected}
               placeholder="Enter Option Here"
               onChange={handleNewOptionChange}
-              maxLength={selected.maxlength}
+              maxLength={incentive.maxlength}
             />
           </Checkbox>
         : null
       }
 
-      <Button disabled={!incentiveIsValid} fullwidth onClick={handleSubmitBid}>Add</Button>
-      {incentiveErrorText && <Text marginless>{incentiveErrorText}</Text>}
+      <Button disabled={!bidIsValid} fullwidth onClick={handleSubmitBid}>Add</Button>
+      {bidErrorText && <Text marginless>{bidErrorText}</Text>}
     </div>
   );
 };
 
-export default IncentiveForm;
+export default BidForm;

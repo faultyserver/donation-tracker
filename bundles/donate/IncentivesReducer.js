@@ -1,7 +1,39 @@
 import _ from 'lodash';
 
+// type Incentive = {
+//   id: number,
+//   amount: number,
+//   name: string,
+//   customOption: string,
+//   parent?: {
+//     id: number,
+//     name: string,
+//     custom: boolean,
+//     maxlength: number,
+//     description: string,
+//   }),
+//   runname: string,
+//   count: number,
+//   goal: number,
+//   description: string,
+// };
+//
+//
+// // Okay so this gets funky. `id` is _either_:
+// //  - the id of the incentive being bid on directly, in the case of simple goal
+// //    incentives, or
+// //  - the id of the bid option selected for an incentive with choices to select
+// //    from, _or_
+// //  - the id of the _incentive_ being bid on, with `customOption` being set as
+// //    the name to use for a new choice being nominated.
+// type Bid = {
+//   incentiveId: number,
+//   amount: number,
+//   customOption: ?string
+// };
+
 const defaultState = {
-  availableIncentives: {},
+  incentives: {},
   bids: {},
 };
 
@@ -12,29 +44,30 @@ const actions = {
 
     return {
       ...state,
-      availableIncentives: incentivesById,
+      incentives: incentivesById,
     };
   },
 
-  'donate/CREATE_INCENTIVE_BID': (state, {data}) => {
+  'donate/CREATE_BID': (state, {data}) => {
     const {bid} = data;
-    const newId = _.uniqueId('newBid');
 
     return {
       ...state,
       bids: {
         ...state.bids,
-        [newId]: bid,
+        [bid.incentiveId]: bid,
       },
     };
   },
 
-  'donate/DELETE_INCENTIVE_BID': (state, {data}) => {
-    const {bidId} = data;
+  'donate/DELETE_BID': (state, {data}) => {
+    const {incentiveId} = data;
     const {
-      [bidId]: _removedBid,
+      [incentiveId]: _removedBid,
       ...filteredBids,
-    } = state;
+    } = state.bids;
+
+    console.log(incentiveId, state.bids, filteredBids)
 
     return {
       ...state,

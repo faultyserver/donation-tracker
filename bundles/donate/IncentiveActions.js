@@ -1,17 +1,45 @@
-export function createBid(bid) {
+function parseCurrency(amount) {
+  const parsed = parseFloat(amount);
+  return parsed === NaN ? null : parsed;
+}
+
+
+export function loadIncentives(incentives) {
+  // Convert Django's serialization of amounts/goals to floats
+  const transformedIncentives = incentives.map((incentive) => {
+    return {
+      ...incentive,
+      amount: parseCurrency(incentive.amount),
+      goal: parseCurrency(incentive.goal),
+    };
+  });
+
   return {
-    type: 'donate/CREATE_INCENTIVE_BID',
+    type: 'incentives/LOAD_INCENTIVES',
     data: {
-      bid
+      incentives: transformedIncentives,
     }
   };
 };
 
-export function deleteBid(bidId) {
+export function createBid({incentiveId, customOption, amount}) {
   return {
-    type: 'donate/DELETE_INCENTIVE_BID',
+    type: 'donate/CREATE_BID',
     data: {
-      bidId
+      bid: {
+        incentiveId,
+        customOption: customOption === "" ? null : customOption,
+        amount,
+      }
+    }
+  };
+};
+
+export function deleteBid(incentiveId) {
+  return {
+    type: 'donate/DELETE_BID',
+    data: {
+      incentiveId,
     }
   };
 };
