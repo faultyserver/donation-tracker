@@ -36,7 +36,7 @@ const Incentives = (props) => {
         <div className={styles.left}>
           <TextInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={setSearch}
             placeholder="Filter Results"
             marginless
           />

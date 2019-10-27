@@ -45,17 +45,9 @@ const BidForm = (props) => {
   ), [allocatedAmount, total, incentive, customOption]);
 
 
-  const handleAmountChange = React.useCallback((e) => {
-    setAllocatedAmount(e.target.value);
-  }, []);
-
   const handleSelectNewOption = React.useCallback((e) => {
     setSelectedChoiceId(null);
     setCustomOptionSelected(true);
-  }, []);
-
-  const handleNewOptionChange = React.useCallback((e) => {
-    setCustomOption(e.target.value);
   }, []);
 
   const handleSubmitBid = React.useCallback(() => {
@@ -96,7 +88,7 @@ const BidForm = (props) => {
         label="Amount to put towards incentive"
         hint={<React.Fragment>You have <strong>${total}</strong> remaining.</React.Fragment>}
         leader="$"
-        onChange={handleAmountChange}
+        onChange={setAllocatedAmount}
         step={step}
         min={0}
         max={total}
@@ -127,7 +119,7 @@ const BidForm = (props) => {
               value={customOption}
               disabled={!customOptionSelected}
               placeholder="Enter Option Here"
-              onChange={handleNewOptionChange}
+              onChange={setCustomOption}
               maxLength={incentive.maxlength}
             />
           </Checkbox>

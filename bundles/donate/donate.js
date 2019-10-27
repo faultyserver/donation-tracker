@@ -66,12 +66,6 @@ class Donate extends React.PureComponent {
     currentIncentives: this.props.initialIncentives || [],
   };
 
-  setValue = key => {
-    return e => {
-      this.setState({[key]: e.target.value});
-    }
-  };
-
   sumIncentives_() {
     return this.state.currentIncentives.reduce((sum, ci) => ci.bid ? sum + (+ci.amount) : 0, 0);
   }
@@ -135,7 +129,7 @@ class Donate extends React.PureComponent {
             label="Preferred Name/Alias"
             hint="Leave blank to donate anonymously"
             size={TextInput.Sizes.LARGE}
-            onChange={(e) => this.updateDonation({name: e.target.value})}
+            onChange={(name) => this.updateDonation({name})}
             maxLength={32}
             autoFocus
           />
@@ -149,7 +143,8 @@ class Donate extends React.PureComponent {
               </React.Fragment>
             }
             size={TextInput.Sizes.LARGE}
-            onChange={(e) => this.updateDonation({email: e.target.value})}
+            type={TextInput.Types.EMAIL}
+            onChange={(email) => this.updateDonation({email})}
           />
 
           <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {receiverName}?</Text>
@@ -172,7 +167,7 @@ class Donate extends React.PureComponent {
             hint={<React.Fragment>Minimum donation is <strong>${minimumDonation}</strong></React.Fragment>}
             size={TextInput.Sizes.LARGE}
             type={TextInput.Types.NUMBER}
-            onChange={(e) => this.updateDonation({amount: e.target.value})}
+            onChange={(amount) => this.updateDonation({amount})}
             step={step}
             min={minimumDonation}
             max={maximumDonation}
@@ -196,7 +191,7 @@ class Donate extends React.PureComponent {
             placeholder="Enter Comment Here"
             hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
             multiline
-            onChange={(e) => this.updateDonation({comment: e.target.value})}
+            onChange={(comment) => this.updateDonation({comment})}
             maxLength={5000}
             rows={5}
           />

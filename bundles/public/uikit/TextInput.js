@@ -27,7 +27,7 @@ const TextInput = (props) => {
     trailer,
     marginless=false,
     className,
-    onChange,
+    onChange, // (value: string, name?: string) => any,
     ...extraProps
   } = props;
 
@@ -36,6 +36,11 @@ const TextInput = (props) => {
   const maxLength = props.maxLength;
   const usedLength = value ? value.length : 0;
   const invalidLength = maxLength != null && usedLength >= maxLength;
+
+  const handleChange = React.useCallback((e) => {
+    if(onChange == null) return false;
+    onChange(e.target.value, name);
+  }, [name]);
 
   return (
     <InputWrapper
@@ -54,7 +59,7 @@ const TextInput = (props) => {
         name={name}
         value={value}
         disabled={disabled}
-        onChange={onChange}
+        onChange={handleChange}
         {...extraProps}
       />
       { maxLength != null &&
