@@ -20,14 +20,12 @@ const defaultState = {...defaultDonation};
 
 const actions = {
   'donation/UPDATE_DONATION': (state, {data}) => {
-    const amount = Number(data.amount);
     return _.merge({...state}, {
       name: data.name,
       nameVisibility: !!data.name ? 'ALIAS' : 'ANON',
       email: data.email,
       wantsEmails: data.wantsEmails,
       amount: data.amount,
-      amount: amount === NaN ? null : amount,
       comment: data.comment,
     });
   },

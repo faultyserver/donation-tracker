@@ -4,39 +4,23 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import cn from 'classnames';
 
-import Anchor from '../public/uikit/Anchor';
-import Button from '../public/uikit/Button';
-import Header from '../public/uikit/Header';
-import RadioGroup from '../public/uikit/RadioGroup';
-import Text from '../public/uikit/Text';
-import TextInput from '../public/uikit/TextInput';
-import Incentives from './components/Incentives';
-import Prizes from './components/Prizes';
-import * as DonationActions from './DonationActions';
-import * as DonationStore from './DonationStore';
-import * as EventDetailsStore from './EventDetailsStore';
+import Anchor from '../../../public/uikit/Anchor';
+import Button from '../../../public/uikit/Button';
+import Header from '../../../public/uikit/Header';
+import RadioGroup from '../../../public/uikit/RadioGroup';
+import Text from '../../../public/uikit/Text';
+import TextInput from '../../../public/uikit/TextInput';
+import Incentives from '../../incentives/components/Incentives';
+import * as EventDetailsStore from '../../event_details/EventDetailsStore';
+import * as DonationActions from '../DonationActions';
+import {EMAIL_OPTIONS, AMOUNT_PRESETS} from '../DonationConstants';
+import * as DonationStore from '../DonationStore';
+import DonationPrizes from './DonationPrizes';
 
-import styles from './Donate.mod.css';
-
-
-const EMAIL_OPTIONS = [
-  {
-    name: 'Yes',
-    value: 'OPTIN',
-  },
-  {
-    name: 'No',
-    value: 'OPTOUT',
-  },
-  {
-    name: 'Use Existing Preference (No if not set)',
-    value: 'CURR',
-  }
-];
-const AMOUNT_PRESETS = [25, 50, 75, 100, 250, 500];
+import styles from './DonationForm.mod.css';
 
 
-class Donate extends React.PureComponent {
+class DonationForm extends React.PureComponent {
   static propTypes = {
     formErrors: PropTypes.shape({
       bidsform: PropTypes.array.isRequired,
@@ -199,7 +183,7 @@ class Donate extends React.PureComponent {
 
         { prizes.length > 0 &&
           <section className={styles.section}>
-            <Prizes prizes={prizes} prizesURL={prizesUrl} rulesURL={rulesUrl} />
+            <DonationPrizes prizes={prizes} prizesURL={prizesUrl} rulesURL={rulesUrl} />
           </section>
         }
 
@@ -245,4 +229,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Donate);
+export default connect(mapStateToProps)(DonationForm);

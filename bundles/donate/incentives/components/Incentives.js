@@ -3,15 +3,15 @@ import {useSelector} from 'react-redux';
 import _ from 'lodash';
 import classNames from 'classnames';
 
-import Button from '../../public/uikit/Button';
-import Checkbox from '../../public/uikit/Checkbox';
-import Clickable from '../../public/uikit/Clickable';
-import Header from '../../public/uikit/Header';
-import ProgressBar from '../../public/uikit/ProgressBar';
-import Text from '../../public/uikit/Text';
-import TextInput from '../../public/uikit/TextInput';
-import BidForm from './BidForm';
-import Bids from './Bids';
+import Button from '../../../public/uikit/Button';
+import Checkbox from '../../../public/uikit/Checkbox';
+import Clickable from '../../../public/uikit/Clickable';
+import Header from '../../../public/uikit/Header';
+import ProgressBar from '../../../public/uikit/ProgressBar';
+import Text from '../../../public/uikit/Text';
+import TextInput from '../../../public/uikit/TextInput';
+import BidForm from './IncentiveBidForm';
+import Bids from './IncentiveBids';
 import * as IncentiveStore from '../IncentiveStore';
 import * as IncentiveUtils from '../IncentiveUtils';
 

@@ -4,10 +4,10 @@ import {Provider, useDispatch} from 'react-redux';
 
 import ErrorBoundary from '../public/errorBoundary';
 import ThemeProvider from '../public/uikit/ThemeProvider';
-import Donate from './Donate';
-import * as DonationActions from './DonationActions';
-import * as EventDetailsActions from './EventDetailsActions';
-import * as IncentiveActions from './IncentiveActions';
+import DonationForm from './donation/components/DonationForm';
+import * as DonationActions from './donation/DonationActions';
+import * as EventDetailsActions from './event_details/EventDetailsActions';
+import * as IncentiveActions from './incentives/IncentiveActions';
 import {store} from './reducer';
 
 /*
@@ -77,7 +77,7 @@ window.DonateApp = function(props) {
       <AppInitializer {...props} />
       <ThemeProvider>
         <ErrorBoundary>
-          <Donate {...props} />
+          <DonationForm {...props} />
         </ErrorBoundary>
       </ThemeProvider>
     </Provider>,

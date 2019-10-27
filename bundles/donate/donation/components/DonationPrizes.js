@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import Anchor from '../../public/uikit/Anchor';
-import Header from '../../public/uikit/Header';
-import Text from '../../public/uikit/Text';
+import Anchor from '../../../public/uikit/Anchor';
+import Header from '../../../public/uikit/Header';
+import Text from '../../../public/uikit/Text';
 
-import styles from './Prizes.mod.css';
+import styles from './DonationPrizes.mod.css';
 
 const Prize = (props) => {
   const {

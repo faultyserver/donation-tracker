@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
-import Donate from './donate';
+import DonationForm from './DonationForm';
 
 describe('#Donate', () => {
   let subject;
@@ -430,7 +430,7 @@ describe('#Donate', () => {
 
     return TestUtils.renderIntoDocument(
       <React.Fragment>
-        <Donate
+        <DonationForm
           {...defaultProps}
           {...props}
         />

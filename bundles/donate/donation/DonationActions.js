@@ -13,6 +13,11 @@ export function loadDonation(donation) {
 };
 
 export function updateDonation(fields={}) {
+  if(fields.hasOwnProperty('amount')) {
+    const parsedAmount = Number(fields.amount);
+    fields.amount = parsedAmount === NaN ? null : parsedAmount;
+  }
+
   return {
     type: 'donation/UPDATE_DONATION',
     data: {

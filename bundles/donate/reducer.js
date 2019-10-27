@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
-import IncentivesReducer from './IncentivesReducer';
-import EventDetailsReducer from './EventDetailsReducer';
-import DonationReducer from './DonationReducer';
+import DonationReducer from './donation/DonationReducer';
+import EventDetailsReducer from './event_details/EventDetailsReducer';
+import IncentivesReducer from './incentives/IncentivesReducer';
 
 const combinedReducer = combineReducers({
   incentives: IncentivesReducer,
