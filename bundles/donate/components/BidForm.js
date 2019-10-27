@@ -46,7 +46,7 @@ const BidForm = (props) => {
 
 
   const handleAmountChange = React.useCallback((e) => {
-    setAllocatedAmount(e.currentTarget.value);
+    setAllocatedAmount(e.target.value);
   }, []);
 
   const handleSelectNewOption = React.useCallback((e) => {
@@ -55,7 +55,7 @@ const BidForm = (props) => {
   }, []);
 
   const handleNewOptionChange = React.useCallback((e) => {
-    setCustomOption(e.currentTarget.value);
+    setCustomOption(e.target.value);
   }, []);
 
   const handleSubmitBid = React.useCallback(() => {

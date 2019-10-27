@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 import cn from 'classnames';
 
@@ -11,6 +12,9 @@ import Text from '../public/uikit/Text';
 import TextInput from '../public/uikit/TextInput';
 import Incentives from './components/Incentives';
 import Prizes from './components/Prizes';
+import * as DonationActions from './DonationActions';
+import * as DonationStore from './DonationStore';
+import * as EventDetailsStore from './EventDetailsStore';
 
 import styles from './Donate.mod.css';
 
@@ -38,50 +42,28 @@ class Donate extends React.PureComponent {
       bidsform: PropTypes.array.isRequired,
       commentform: PropTypes.object.isRequired,
     }).isRequired,
-    initialForm: PropTypes.shape({
-      requestedalias: PropTypes.string,
-      requestedemail: PropTypes.string,
-      amount: PropTypes.string,
-    }).isRequired,
     initialIncentives: PropTypes.arrayOf(PropTypes.shape({
       bid: PropTypes.number, // will be null if the bid closed while we were filling it out
       amount: PropTypes.string.isRequired,
       customoptionname: PropTypes.string.isRequired,
     }).isRequired).isRequired,
-    event: PropTypes.shape({
-      receivername: PropTypes.string.isRequired,
-    }).isRequired,
-    step: PropTypes.number.isRequired,
-    minimumDonation: PropTypes.number.isRequired,
-    maximumDonation: PropTypes.number.isRequired,
-    donateUrl: PropTypes.string.isRequired,
     prizes: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
       description: PropTypes.string,
       minimumbid: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired).isRequired,
-    prizesUrl: PropTypes.string.isRequired,
-    rulesUrl: PropTypes.string,
     csrfToken: PropTypes.string,
     onSubmit: PropTypes.func,
   };
 
   static defaultProps = {
-    step: 0.01,
-    minimumDonation: 5,
-    maximumDonation: 10000,
     initialIncentives: [],
   };
 
   state = {
     showIncentives: this.props.initialIncentives.length !== 0,
     currentIncentives: this.props.initialIncentives || [],
-    requestedalias: this.props.initialForm.requestedalias || '',
-    requestedemail: this.props.initialForm.requestedemail || '',
-    requestedsolicitemail: this.props.initialForm.requestedsolicitemail || 'CURR',
-    comment: this.props.initialForm.comment || '',
-    amount: this.props.initialForm.amount || '',
   };
 
   setValue = key => {
@@ -90,41 +72,16 @@ class Donate extends React.PureComponent {
     }
   };
 
-  setAmount = (amount) => {
-    return e => {
-      this.setState({amount});
-    }
-  };
-
-  addIncentive_ = (incentive) => {
-    const {
-      currentIncentives,
-    } = this.state;
-    const existing = currentIncentives.findIndex(ci => ci.bid === incentive.bid);
-    let newIncentives;
-    if (existing !== -1) {
-      incentive.amount += (+currentIncentives[existing].amount);
-      newIncentives = currentIncentives.slice(0, existing).concat([incentive]).concat(currentIncentives.slice(existing + 1));
-    } else {
-      newIncentives = currentIncentives.concat([incentive]);
-    }
-    this.setState({currentIncentives: newIncentives});
-  };
-
-  deleteIncentive_ = (i) => {
-    return e => {
-      const {
-        currentIncentives,
-      } = this.state;
-      this.setState({currentIncentives: currentIncentives.slice(0, i).concat(currentIncentives.slice(i + 1))});
-    }
-  };
-
   sumIncentives_() {
     return this.state.currentIncentives.reduce((sum, ci) => ci.bid ? sum + (+ci.amount) : 0, 0);
   }
 
-  canSubmit_() {
+  updateDonation = (fields={}) => {
+    const {dispatch} = this.props;
+    dispatch(DonationActions.updateDonation(fields));
+  }
+
+  cannotSubmit_() {
     const {
       amount,
       currentIncentives,
@@ -156,53 +113,35 @@ class Donate extends React.PureComponent {
   }
 
   render() {
-    const {
-      showIncentives,
-      currentIncentives,
-      requestedalias,
-      requestedemail,
-      requestedsolicitemail,
-      comment,
-      amount,
-    } = this.state;
-    const {
-      step,
-      event,
-      prizesUrl,
-      rulesUrl,
-      minimumDonation,
-      maximumDonation,
-      formErrors,
-      prizes,
-      donateUrl,
-      incentives,
-      csrfToken,
-      onSubmit,
-    } = this.props;
+    const {formErrors, prizes, incentives, eventDetails, donation, csrfToken, onSubmit} = this.props;
+    const {showIncentives} = this.state;
+    const {receiverName, donateUrl, prizesUrl, rulesUrl, minimumDonation, maximumDonation, step} = eventDetails;
+    const {name, nameVisibility, email, wantsEmails, amount, comment} = donation;
+
     // TODO: show more form errors
-    const canSubmit = this.canSubmit_();
+    const cannotSubmit = this.cannotSubmit_();
 
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
         <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
-        <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {event.receivername}.</Text>
+        <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {receiverName}.</Text>
 
         <section className={styles.section}>
-          <input type="hidden" name="requestedvisibility" value={requestedalias ? 'ALIAS' : 'ANON'}/>
+          <input type="hidden" name="requestedvisibility" value={nameVisibility}/>
           <TextInput
             name="requestedalias"
-            value={requestedalias}
+            value={name}
             label="Preferred Name/Alias"
             hint="Leave blank to donate anonymously"
             size={TextInput.Sizes.LARGE}
-            onChange={this.setValue('requestedalias')}
+            onChange={(e) => this.updateDonation({name: e.target.value})}
             maxLength={32}
             autoFocus
           />
           <TextInput
             name="requestedemail"
-            value={requestedemail}
+            value={email}
             label="Email Address"
             hint={
               <React.Fragment>
@@ -210,42 +149,42 @@ class Donate extends React.PureComponent {
               </React.Fragment>
             }
             size={TextInput.Sizes.LARGE}
-            onChange={this.setValue('requestedemail')}
+            onChange={(e) => this.updateDonation({email: e.target.value})}
           />
 
-          <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {event.receivername}?</Text>
+          <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {receiverName}?</Text>
           <div className={styles.emailButtons}>
-            <input type="hidden" name="requestedsolicitemail" value={requestedsolicitemail}/>
+            <input type="hidden" name="requestedsolicitemail" value={wantsEmails}/>
             <RadioGroup
               className={styles.emailOptin}
               options={EMAIL_OPTIONS}
-              value={requestedsolicitemail}
-              onChange={(value) => this.setState({requestedsolicitemail: value})}
+              value={wantsEmails}
+              onChange={(value) => this.updateDonation({wantsEmails: value})}
             />
           </div>
 
           <TextInput
             name="amount"
-            value={amount}
+            value={amount || ""}
             label="Amount"
             leader="$"
             placeholder="0.00"
             hint={<React.Fragment>Minimum donation is <strong>${minimumDonation}</strong></React.Fragment>}
             size={TextInput.Sizes.LARGE}
             type={TextInput.Types.NUMBER}
-            onChange={this.setValue('amount')}
+            onChange={(e) => this.updateDonation({amount: e.target.value})}
             step={step}
             min={minimumDonation}
             max={maximumDonation}
           />
           <div className={styles.amountPresets}>
-            {AMOUNT_PRESETS.map((amount) => (
+            {AMOUNT_PRESETS.map((amountPreset) => (
               <Button
                   className={styles.amountPreset}
-                  key={amount}
+                  key={amountPreset}
                   look={Button.Looks.OUTLINED}
-                  onClick={this.setAmount(amount)}>
-                ${amount}
+                  onClick={() => this.updateDonation({amount: amountPreset})}>
+                ${amountPreset}
               </Button>
             ))}
           </div>
@@ -257,7 +196,7 @@ class Donate extends React.PureComponent {
             placeholder="Enter Comment Here"
             hint="Please refrain from offensive language or hurtful remarks. All donation comments are screened and will be removed from the website if deemed unacceptable."
             multiline
-            onChange={this.setValue('comment')}
+            onChange={(e) => this.updateDonation({comment: e.target.value})}
             maxLength={5000}
             rows={5}
           />
@@ -290,10 +229,10 @@ class Donate extends React.PureComponent {
 
         <section className={styles.section}>
           <Header size={Header.Sizes.H3}>Donate!</Header>
-          {canSubmit && <Text>{canSubmit}</Text>}
+          {cannotSubmit && <Text>{cannotSubmit}</Text>}
           <Button
               size={Button.Sizes.LARGE}
-              disabled={canSubmit}
+              disabled={cannotSubmit}
               fullwidth
               type="submit">
             Finish
@@ -304,4 +243,11 @@ class Donate extends React.PureComponent {
   }
 };
 
-export default Donate;
+const mapStateToProps = (state) => {
+  return {
+    eventDetails: EventDetailsStore.getEventDetails(state),
+    donation: DonationStore.getDonation(state),
+  };
+};
+
+export default connect(mapStateToProps)(Donate);

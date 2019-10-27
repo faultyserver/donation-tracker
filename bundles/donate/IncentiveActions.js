@@ -24,7 +24,7 @@ export function loadIncentives(incentives) {
 
 export function createBid({incentiveId, customOption, amount}) {
   return {
-    type: 'donate/CREATE_BID',
+    type: 'incentives/CREATE_BID',
     data: {
       bid: {
         incentiveId,

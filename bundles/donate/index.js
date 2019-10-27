@@ -5,6 +5,8 @@ import {Provider, useDispatch} from 'react-redux';
 import ErrorBoundary from '../public/errorBoundary';
 import ThemeProvider from '../public/uikit/ThemeProvider';
 import Donate from './Donate';
+import * as DonationActions from './DonationActions';
+import * as EventDetailsActions from './EventDetailsActions';
 import * as IncentiveActions from './IncentiveActions';
 import {store} from './reducer';
 
@@ -17,14 +19,53 @@ import {store} from './reducer';
 */
 const AppInitializer = (props) => {
   const {
-    incentives
+    // Incentives
+    incentives,
+    // EventDetails
+    event,
+    prizesUrl,
+    rulesUrl,
+    donateUrl,
+    minimumDonation,
+    maximumDonation,
+    step,
+    // Donation
+    initialForm,
   } = props;
 
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     dispatch(IncentiveActions.loadIncentives(incentives));
-  }, [dispatch, props]);
+  }, [dispatch, incentives]);
+
+  React.useEffect(() => {
+    dispatch(DonationActions.loadDonation(initialForm));
+  }, [dispatch, initialForm]);
+
+  React.useEffect(
+    () => {
+      dispatch(EventDetailsActions.loadEventDetails({
+          event,
+          prizesUrl,
+          rulesUrl,
+          donateUrl,
+          minimumDonation,
+          maximumDonation,
+          step,
+      }));
+    },
+    [
+      dispatch,
+      event,
+      prizesUrl,
+      rulesUrl,
+      donateUrl,
+      minimumDonation,
+      maximumDonation,
+      step,
+    ]
+  );
 
   return null;
 };

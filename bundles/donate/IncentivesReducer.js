@@ -48,7 +48,7 @@ const actions = {
     };
   },
 
-  'donate/CREATE_BID': (state, {data}) => {
+  'incentives/CREATE_BID': (state, {data}) => {
     const {bid} = data;
 
     return {
@@ -60,7 +60,7 @@ const actions = {
     };
   },
 
-  'donate/DELETE_BID': (state, {data}) => {
+  'incentives/DELETE_BID': (state, {data}) => {
     const {incentiveId} = data;
     const {
       [incentiveId]: _removedBid,
