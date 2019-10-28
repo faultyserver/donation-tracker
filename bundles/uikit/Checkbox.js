@@ -47,7 +47,7 @@ const Checkbox = (props) => {
         onClick={onChange}>
       <Icon
         className={styles.check}
-        name={checked ? Icon.Names.CHECKBOX_CHECKED : Icon.Names.CHECKBOX_OPEN}
+        name={checked ? Icon.Types.CHECKBOX_CHECKED : Icon.Types.CHECKBOX_OPEN}
       />
 
       <div className={classNames(styles.content, contentClassName)}>

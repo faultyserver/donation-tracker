@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import cn from 'classnames';
 
+import * as CurrencyUtils from '../../../public/util/currency';
 import Anchor from '../../../uikit/Anchor';
 import Button from '../../../uikit/Button';
 import Header from '../../../uikit/Header';
@@ -148,7 +149,7 @@ class DonationForm extends React.PureComponent {
             label="Amount"
             leader="$"
             placeholder="0.00"
-            hint={<React.Fragment>Minimum donation is <strong>${minimumDonation}</strong></React.Fragment>}
+            hint={<React.Fragment>Minimum donation is <strong>{CurrencyUtils.asCurrency(minimumDonation)}</strong></React.Fragment>}
             size={TextInput.Sizes.LARGE}
             type={TextInput.Types.NUMBER}
             onChange={(amount) => this.updateDonation({amount})}

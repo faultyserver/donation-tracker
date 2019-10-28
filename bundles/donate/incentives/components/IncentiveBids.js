@@ -2,6 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import {useDispatch, useSelector} from 'react-redux';
 
+import * as CurrencyUtils from '../../../public/util/currency';
 import Clickable from '../../../uikit/Clickable';
 import Header from '../../../uikit/Header';
 import Text from '../../../uikit/Text';
@@ -18,6 +19,8 @@ const Bid = (props) => {
     className,
   } = props;
 
+  const bidAmount = CurrencyUtils.asCurrency(bid.amount);
+
   return (
     <Clickable
         key={incentive.id}
@@ -26,7 +29,7 @@ const Bid = (props) => {
       <Header size={Header.Sizes.H4} marginless>{incentive.runname}</Header>
       <Text size={Text.Sizes.SIZE_14}>{incentive.parent ? incentive.parent.name : incentive.name}</Text>
       <Text size={Text.Sizes.SIZE_14} marginless>Choice: {bid.customOption || incentive.name}</Text>
-      <Text size={Text.Sizes.SIZE_14} marginless>Amount: ${bid.amount}</Text>
+      <Text size={Text.Sizes.SIZE_14} marginless>Amount: {bidAmount}</Text>
     </Clickable>
   );
 };

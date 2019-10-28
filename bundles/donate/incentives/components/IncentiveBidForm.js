@@ -2,6 +2,7 @@ import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import classNames from 'classnames';
 
+import * as CurrencyUtils from '../../../public/util/currency';
 import Button from '../../../uikit/Button';
 import Checkbox from '../../../uikit/Checkbox';
 import Header from '../../../uikit/Header';
@@ -18,18 +19,22 @@ const BidForm = (props) => {
   const {
     incentiveId,
     step,
-    total,
+    total: donationTotal,
     className,
   } = props;
 
   const dispatch = useDispatch();
 
-  const {incentive, bidChoices} = useSelector((state) => ({
+  const {incentive, bidChoices, allocatedTotal} = useSelector((state) => ({
     incentive: IncentiveStore.getIncentive(state, incentiveId),
     bidChoices: IncentiveStore.getChildIncentives(state, incentiveId),
+    allocatedTotal: IncentiveStore.getAllocatedBidTotal(state),
   }));
 
-  const [allocatedAmount, setAllocatedAmount] = React.useState(total);
+  const remainingDonationTotal = donationTotal - allocatedTotal;
+  const remainingDonationTotalString = CurrencyUtils.asCurrency(remainingDonationTotal);
+
+  const [allocatedAmount, setAllocatedAmount] = React.useState(remainingDonationTotal);
   const [selectedChoiceId, setSelectedChoiceId] = React.useState(null);
   const [customOptionSelected, setCustomOptionSelected] = React.useState(false);
   const [customOption, setCustomOption] = React.useState("");
@@ -37,17 +42,16 @@ const BidForm = (props) => {
   const [bidIsValid, bidErrorText] = React.useMemo(() => (
     IncentiveUtils.validateBid({
       amount: allocatedAmount,
-      total,
+      donationTotal,
       incentive,
       choice: selectedChoiceId,
       customOption,
     })
-  ), [allocatedAmount, total, incentive, customOption]);
+  ), [allocatedAmount, donationTotal, incentive, customOption]);
 
-
-  const handleSelectNewOption = React.useCallback((e) => {
-    setSelectedChoiceId(null);
-    setCustomOptionSelected(true);
+  const handleNewChoice = React.useCallback((choiceId) => {
+    setSelectedChoiceId(choiceId);
+    setCustomOptionSelected(choiceId == null);
   }, []);
 
   const handleSubmitBid = React.useCallback(() => {
@@ -62,7 +66,7 @@ const BidForm = (props) => {
   if(incentive == null) {
     return (
       <div className={classNames(styles.container, className)}>
-        <Text>You have ${total} remaining.</Text>
+        <Text>You have {remainingDonationTotalString} remaining.</Text>
       </div>
     );
   }
@@ -78,7 +82,7 @@ const BidForm = (props) => {
       { incentive.goal &&
         <React.Fragment>
           <ProgressBar className={styles.progressBar} progress={goalProgress} />
-          <Text marginless>Current Raised Amount: <span>${incentive.amount} / ${incentive.goal}</span></Text>
+          <Text marginless>Current Raised Amount: <span>{CurrencyUtils.asCurrency(incentive.amount)} / {CurrencyUtils.asCurrency(incentive.goal)}</span></Text>
         </React.Fragment>
       }
 
@@ -86,12 +90,12 @@ const BidForm = (props) => {
         value={allocatedAmount}
         type={TextInput.Types.NUMBER}
         label="Amount to put towards incentive"
-        hint={<React.Fragment>You have <strong>${total}</strong> remaining.</React.Fragment>}
+        hint={<React.Fragment>You have <strong>{remainingDonationTotalString}</strong> remaining.</React.Fragment>}
         leader="$"
         onChange={setAllocatedAmount}
         step={step}
         min={0}
-        max={total}
+        max={remainingDonationTotal}
       />
 
       { bidChoices.length > 0
@@ -101,7 +105,7 @@ const BidForm = (props) => {
                 checked={selectedChoiceId === choice.id}
                 contentClassName={styles.choiceLabel}
                 look={Checkbox.Looks.DENSE}
-                onChange={() => setSelectedChoiceId(choice.id)}>
+                onChange={() => handleNewChoice(choice.id)}>
               <Checkbox.Header>{choice.name}</Checkbox.Header>
               <span className={styles.choiceAmount}>${choice.amount}</span>
             </Checkbox>
@@ -114,7 +118,7 @@ const BidForm = (props) => {
               label="Nominate a new option!"
               checked={customOptionSelected}
               look={Checkbox.Looks.NORMAL}
-              onChange={handleSelectNewOption}>
+              onChange={() => handleNewChoice(null)}>
             <TextInput
               value={customOption}
               disabled={!customOptionSelected}

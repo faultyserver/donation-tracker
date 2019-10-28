@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect';
+import _ from 'lodash';
 
 export const getIncentivesById = (state) => state.incentives.incentives;
 export const getBidsById = (state) => state.incentives.bids;
@@ -6,6 +7,11 @@ export const getBidsById = (state) => state.incentives.bids;
 export const getBids = createSelector(
   [getBidsById],
   (bidsById) => Object.values(bidsById)
+);
+
+export const getAllocatedBidTotal = createSelector(
+  [getBids],
+  (bids) => _.sumBy(bids, 'amount')
 );
 
 export const getIncentives = createSelector(
