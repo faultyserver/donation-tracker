@@ -37,7 +37,7 @@ const Incentives = (props) => {
           <TextInput
             value={search}
             onChange={setSearch}
-            placeholder="Filter Results"
+            placeholder="Filter Incentives"
             marginless
           />
           <div className={styles.results}>
@@ -64,7 +64,7 @@ const Incentives = (props) => {
         />
       </div>
 
-      <Header size={Header.Sizes.H4}>Your Incentives</Header>
+      <Header size={Header.Sizes.H4}>Your Bids</Header>
       <Bids className={styles.bids} />
     </div>
   );

@@ -102,12 +102,10 @@ class DonationForm extends React.PureComponent {
 
     return (
       <form className={styles.donationForm} action={donateUrl} method="post" onSubmit={onSubmit}>
-        <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken}/>
         <Header size={Header.Sizes.H1} marginless>Thank You For Your Donation</Header>
         <Text size={Text.Sizes.SIZE_16}>100% of your donation goes directly to {receiverName}.</Text>
 
         <section className={styles.section}>
-          <input type="hidden" name="requestedvisibility" value={nameVisibility}/>
           <TextInput
             name="requestedalias"
             value={name}
@@ -134,7 +132,6 @@ class DonationForm extends React.PureComponent {
 
           <Text size={Text.Sizes.SIZE_16} marginless>Do you want to receive emails from {receiverName}?</Text>
           <div className={styles.emailButtons}>
-            <input type="hidden" name="requestedsolicitemail" value={wantsEmails}/>
             <RadioGroup
               className={styles.emailOptin}
               options={EMAIL_OPTIONS}
