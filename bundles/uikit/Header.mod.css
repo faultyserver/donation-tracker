@@ -15,14 +15,17 @@
 
 .size1 {
   font-size: 32px;
+  letter-spacing: -0.5px;
   margin-left: -1px;
 }
 
 .size2 {
+  letter-spacing: -0.25px;
   font-size: 28px;
 }
 
 .size3 {
+  letter-spacing: -0.25px;
   font-size: 24px;
 }
 
