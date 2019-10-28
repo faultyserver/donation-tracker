@@ -8,7 +8,7 @@ import styles from './Clickable.mod.css';
 // that the click is handled in a consistent, accessible way.
 const Clickable = (props) => {
   const {
-    tag: Tag = 'div', // Tag to use as a container: 'div' | 'a' | 'span'
+    tag: Tag = 'div', // Tag to use as a container: 'div' | 'a' | 'span' | 'label'
     role = 'button', // ARIA role: 'button' | switch' | 'menuitem'
     tabIndex = 0,
     children,
@@ -20,10 +20,10 @@ const Clickable = (props) => {
 
   const ref = React.useRef();
   const handleKeyPress = React.useCallback((ev) => {
-    if(onClick != null && (ev.key === 'Enter' || ev.key === 'Spacebar')) {
+    if(onClick != null && (ev.key === 'Enter' || ev.key === 'Spacebar' || ev.key === ' ')) {
       ev.preventDefault();
+      ref.current.click();
     }
-    ref.current.click();
   }, [ref, onClick]);
 
   return (

@@ -63,7 +63,7 @@ const TextInput = (props) => {
         {...extraProps}
       />
       { maxLength != null &&
-        <div className={classNames(styles.lengthLimit, {[styles.invalidLength]: invalidLength})}>
+        <div className={classNames(styles.lengthLimit, {[styles.invalidLength]: invalidLength})} aria-hidden>
           {usedLength} / {maxLength}
         </div>
       }

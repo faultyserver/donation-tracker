@@ -1,6 +1,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
+import Clickable from './Clickable';
+import Icon from './Icon';
+
 import styles from './Checkbox.mod.css';
 
 const CheckboxLooks = {
@@ -36,20 +39,22 @@ const Checkbox = (props) => {
   } = props;
 
   return (
-    <label className={classNames(styles.container, look, className, {[styles.disabled]: disabled})}>
-      <input
+    <Clickable
+        tag="label"
+        role="checkbox"
+        aria-checked={!!checked}
+        className={classNames(styles.container, look, className, {[styles.disabled]: disabled})}
+        onClick={onChange}>
+      <Icon
         className={styles.check}
-        type="checkbox"
-        name={name}
-        checked={checked}
-        disabled={disabled}
-        onChange={onChange}
+        name={checked ? Icon.Names.CHECKBOX_CHECKED : Icon.Names.CHECKBOX_OPEN}
       />
+
       <div className={classNames(styles.content, contentClassName)}>
         {label && <CheckboxHeader>{label}</CheckboxHeader>}
         {children}
       </div>
-    </label>
+    </Clickable>
   );
 };
 
