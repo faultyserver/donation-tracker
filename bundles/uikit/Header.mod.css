@@ -1,7 +1,6 @@
 .header {
   margin: 0;
   margin-bottom: 1rem;
-  font-weight: 700;
   font-family: var(--font-secondary);
 }
 
@@ -16,28 +15,23 @@
 
 .size1 {
   font-size: 32px;
-  letter-spacing: -0.5px;
   margin-left: -1px;
 }
 
 .size2 {
   font-size: 28px;
-  letter-spacing: -0.5px;
 }
 
 .size3 {
   font-size: 24px;
-  letter-spacing: -0.25px;
 }
 
 .size4 {
   font-size: 20px;
-  letter-spacing: -0.25px;
 }
 
 .size5 {
   font-size: 16px;
-  letter-spacing: -0.25px;
 }
 
 .size6 {

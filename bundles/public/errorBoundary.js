@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Header from './uikit/Header';
+import Header from '../uikit/Header';
 
 export default class ErrorBoundary extends React.PureComponent {
   static propTypes = {

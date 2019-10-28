@@ -1,8 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-import Header from './Header';
-
 import styles from './Checkbox.mod.css';
 
 const CheckboxLooks = {
@@ -13,13 +11,14 @@ const CheckboxLooks = {
 const CheckboxHeader = (props) => {
   const {
     children,
+    className,
     ...headerProps
   } = props;
 
   return (
-    <Header {...headerProps} size={Header.Sizes.H5} marginless>
+    <div className={classNames(styles.header, className)} {...headerProps}>
       {props.children}
-    </Header>
+    </div>
   );
 };
 

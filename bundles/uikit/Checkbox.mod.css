@@ -3,6 +3,9 @@
   display: flex;
   border-radius: 4px;
   cursor: pointer;
+  /* This is needed because `label` is currently targeted with a bold
+    font-weight, which isn't desirable for most content in a checkbox. */
+  font-weight: inherit;
 
   &:hover,
   &:focus,

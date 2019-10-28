@@ -2,12 +2,12 @@ import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import classNames from 'classnames';
 
-import Button from '../../../public/uikit/Button';
-import Checkbox from '../../../public/uikit/Checkbox';
-import Header from '../../../public/uikit/Header';
-import ProgressBar from '../../../public/uikit/ProgressBar';
-import Text from '../../../public/uikit/Text';
-import TextInput from '../../../public/uikit/TextInput';
+import Button from '../../../uikit/Button';
+import Checkbox from '../../../uikit/Checkbox';
+import Header from '../../../uikit/Header';
+import ProgressBar from '../../../uikit/ProgressBar';
+import Text from '../../../uikit/Text';
+import TextInput from '../../../uikit/TextInput';
 import * as IncentiveActions from '../IncentiveActions';
 import * as IncentiveStore from '../IncentiveStore';
 import * as IncentiveUtils from '../IncentiveUtils';

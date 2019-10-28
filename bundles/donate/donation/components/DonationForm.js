@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import cn from 'classnames';
 
-import Anchor from '../../../public/uikit/Anchor';
-import Button from '../../../public/uikit/Button';
-import Header from '../../../public/uikit/Header';
-import RadioGroup from '../../../public/uikit/RadioGroup';
-import Text from '../../../public/uikit/Text';
-import TextInput from '../../../public/uikit/TextInput';
+import Anchor from '../../../uikit/Anchor';
+import Button from '../../../uikit/Button';
+import Header from '../../../uikit/Header';
+import RadioGroup from '../../../uikit/RadioGroup';
+import Text from '../../../uikit/Text';
+import TextInput from '../../../uikit/TextInput';
 import Incentives from '../../incentives/components/Incentives';
 import * as EventDetailsStore from '../../event_details/EventDetailsStore';
 import * as DonationActions from '../DonationActions';

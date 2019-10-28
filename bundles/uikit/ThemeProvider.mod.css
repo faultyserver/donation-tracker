@@ -12,7 +12,7 @@
   --text-muted: #a26179;
   --text-link: #0076a3;
   --text-inverted: #fff;
-  --font-primary: museo-sans, "Museo Sans 500 Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-primary: museo-sans, "Museo Sans", "Museo Sans 500 Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-secondary: Cubano, futura-pt, museo-sans, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 
@@ -21,4 +21,5 @@
   font-weight: 400;
   font-size: 16px;
   color: var(--text-normal);
+  text-rendering: optimizeLegibility;
 }

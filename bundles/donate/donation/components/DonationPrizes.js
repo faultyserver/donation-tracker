@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import Anchor from '../../../public/uikit/Anchor';
-import Header from '../../../public/uikit/Header';
-import Text from '../../../public/uikit/Text';
+import Anchor from '../../../uikit/Anchor';
+import Header from '../../../uikit/Header';
+import Text from '../../../uikit/Text';
 
 import styles from './DonationPrizes.mod.css';
 

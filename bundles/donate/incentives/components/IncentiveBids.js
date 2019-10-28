@@ -2,9 +2,9 @@ import * as React from 'react';
 import classNames from 'classnames';
 import {useDispatch, useSelector} from 'react-redux';
 
-import Clickable from '../../../public/uikit/Clickable';
-import Header from '../../../public/uikit/Header';
-import Text from '../../../public/uikit/Text';
+import Clickable from '../../../uikit/Clickable';
+import Header from '../../../uikit/Header';
+import Text from '../../../uikit/Text';
 import * as IncentiveActions from '../IncentiveActions';
 import * as IncentiveStore from '../IncentiveStore';
 

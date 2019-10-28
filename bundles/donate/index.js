@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Provider, useDispatch} from 'react-redux';
 
 import ErrorBoundary from '../public/errorBoundary';
-import ThemeProvider from '../public/uikit/ThemeProvider';
+import ThemeProvider from '../uikit/ThemeProvider';
 import DonationForm from './donation/components/DonationForm';
 import * as DonationActions from './donation/DonationActions';
 import * as EventDetailsActions from './event_details/EventDetailsActions';
