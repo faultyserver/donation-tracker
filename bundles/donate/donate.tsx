@@ -152,12 +152,14 @@ class Incentives extends React.PureComponent<IncentivesProps, IncentivesState> {
       // This should never get hit. We know `find` should succeed.
       if(result == null) return null;
 
+      const {parent, runname} = result;
+
       this.setState({
-        selected: {...(result.parent || result), runname: result.runname},
-        choices: result.parent ? incentives.filter(i => i.parent && i.parent.id === result.parent.id) : incentives.filter(i => i.parent && i.parent.id === result.id),
+        selected: {...parent, ...result},
+        choices: parent ? incentives.filter(i => i.parent && i.parent.id === parent.id) : incentives.filter(i => i.parent && i.parent.id === result.id),
         newOption: false,
         newOptionValue: '',
-        selectedChoiceId: null,
+        selectedChoiceId: undefined,
         amount: total,
       });
     };
@@ -365,7 +367,7 @@ class Donate extends React.PureComponent<DonateProps, DonateState> {
   setComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => this.setState({comment: e.target.value});
 
   setAmount = (amount: string) => {
-    return (e: React.MouseEvent) => {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
       this.setState({amount});
       e.preventDefault();
     }
