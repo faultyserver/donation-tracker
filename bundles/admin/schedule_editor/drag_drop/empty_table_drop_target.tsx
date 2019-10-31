@@ -4,7 +4,7 @@ import { DropTarget, DropTargetMonitor } from 'react-dnd';
 type EmptyTableDropTargetProps = {
   isOver: boolean;
   canDrop: boolean;
-  elementType?: 'span';
+  elementType?: 'span' | 'tr';
   connectDropTarget: (target: any) => any;
   moveSpeedrun: (source: any, destination?: any, before?: boolean) => any;
 };

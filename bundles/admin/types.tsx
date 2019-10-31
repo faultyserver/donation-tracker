@@ -1,4 +1,10 @@
-export type SpeedrunModel = {
+export interface Model {
+  _error: any;
+  _internal: any;
+  _fields: any;
+}
+
+export interface SpeedrunModel extends Model {
   pk: number;
   name: string;
   order: number;
@@ -12,12 +18,10 @@ export type SpeedrunModel = {
   setup_time: string;
   description: string;
   commentators: string;
-  _internal: any;
 };
 
-export type Event = {
+export interface EventModel extends Model {
   pk: number;
   short: string;
+  name: string;
 }
-
-export type Model = SpeedrunModel | Event;

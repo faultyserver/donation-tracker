@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Speedrun from './speedrun.js';
+import Speedrun from './speedrun';
 import EmptyTableDropTarget from './drag_drop/empty_table_drop_target';
 import ErrorList from '../../public/error_list';
+import {SpeedrunModel, EventModel} from '../types';
 
-function orderSort(a, b) {
+function orderSort(a: SpeedrunModel, b: SpeedrunModel) {
     if (a.order === null && b.order === null) {
         return 0;
     } else if (a.order !== null && b.order === null) {
@@ -45,15 +46,24 @@ class Header extends React.Component<HeaderProps> {
             </thead>
         );
     }
-}
+};
 
 
 type SpeedrunTableProps = {
-
+  speedruns: Array<SpeedrunModel>;
+  drafts: Array<Partial<SpeedrunModel>>;
+  event: EventModel;
+  newSpeedrun?: () => any;
+  moveSpeedrun?: (source: any, destination?: any, before?: boolean) => any;
+  saveModel?: (pk: any, fields: Partial<SpeedrunModel>) => any;
+  cancelEdit?: (draft: Partial<SpeedrunModel>) => any;
+  editModel?: (mode: SpeedrunModel) => any;
+  saveField?: (model: Partial<SpeedrunModel>, field?: string, value?: any) => any;
+  updateField?: (pk: any, field: string, value: any) => any;
 };
 
 class SpeedrunTable extends React.Component<SpeedrunTableProps> {
-    constructor(props) {
+    constructor(props: SpeedrunTableProps) {
         super(props);
         this.newSpeedrun_ = this.newSpeedrun_.bind(this);
     }
@@ -78,9 +88,9 @@ class SpeedrunTable extends React.Component<SpeedrunTableProps> {
                     {speedruns[0] && speedruns[0].order === null ?
                         <EmptyTableDropTarget
                             elementType='tr'
-                            moveSpeedrun={(pk) => saveField(speedruns.find((sr) => sr.pk === pk), 'order', 1)}
+                            moveSpeedrun={(pk) => saveField && saveField(speedruns.find((sr) => sr.pk === pk)!, 'order', 1)}
                             >
-                            <td style={{textAlign: 'center'}} colSpan='10'>
+                            <td style={{textAlign: 'center'}} colSpan={10}>
                                 Drop a run here to start the schedule
                             </td>
                         </EmptyTableDropTarget>
@@ -98,7 +108,7 @@ class SpeedrunTable extends React.Component<SpeedrunTableProps> {
                               ? <React.Fragment>
                                   { error !== 'Validation Error'
                                     ? <tr key={`error-${pk}`}>
-                                        <td colSpan='10'>
+                                        <td colSpan={10}>
                                           <ErrorList errors={[error]} />
                                         </td>
                                       </tr>
@@ -106,7 +116,7 @@ class SpeedrunTable extends React.Component<SpeedrunTableProps> {
                                   }
                                   { fieldErrors
                                     ? <tr key={`error-${pk}-__all__`}>
-                                        <td colSpan='10'>
+                                        <td colSpan={10}>
                                           <ErrorList errors={fieldErrors} />
                                         </td>
                                       </tr>
@@ -129,26 +139,26 @@ class SpeedrunTable extends React.Component<SpeedrunTableProps> {
                           </React.Fragment>
                         );
                     })}
-                    {Object.keys(drafts).map((pk) => {
-                        if (pk >= 0) {
+                    {Object.keys(drafts).map((pk: string) => {
+                        if (+pk >= 0) {
                             return null;
                         }
-                        const draft = drafts[pk];
+                        const draft = drafts[+pk]!;
                         return (
                           <React.Fragment key={pk}>
                             { draft && draft._error
                               ? <React.Fragment>
                                   { draft._error !== 'Validation Error'
                                     ? <tr key={`error-${pk}`}>
-                                        <td colSpan='10'>
+                                        <td colSpan={10}>
                                           {draft._error}
                                         </td>
                                       </tr>
                                     : null
                                   }
-                                  {((draft._fields && draft._fields.__all__) || []).map((error, i) =>
+                                  {((draft._fields && draft._fields.__all__) || []).map((error: any, i: number) =>
                                       <tr key={`error-${pk}-__all__-${i}`}>
-                                        <td colSpan='10'>
+                                        <td colSpan={10}>
                                           {error}
                                         </td>
                                       </tr>
@@ -174,12 +184,8 @@ class SpeedrunTable extends React.Component<SpeedrunTableProps> {
     }
 
     newSpeedrun_() {
-        this.props.newSpeedrun();
+        this.props.newSpeedrun && this.props.newSpeedrun();
     }
 }
-
-SpeedrunTable.propTypes = {
-    // TODO
-};
 
 export default SpeedrunTable;

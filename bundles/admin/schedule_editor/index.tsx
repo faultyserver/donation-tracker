@@ -8,11 +8,11 @@ import Spinner from '../../public/spinner';
 import authHelper from '../../public/api/helpers/auth';
 
 import SpeedrunTable from './speedrun_table';
-import {SpeedrunModel} from '../types';
+import {SpeedrunModel, EventModel} from '../types';
 
 type ScheduleEditorProps = {
   speedruns: Array<SpeedrunModel>;
-  event: string;
+  event: EventModel;
   drafts: Array<SpeedrunModel>;
   status: any;
   editable: boolean;
@@ -22,7 +22,7 @@ type ScheduleEditorProps = {
   updateDraftModelField: (type: string, pk: any, field: string, value: any) => any;
   newDraftModel: (model: {type: string} & Partial<SpeedrunModel>) => any;
   deleteDraftModel: (model: {type: string} & Partial<SpeedrunModel>) => any;
-  saveField: (model: {type: string} & Partial<SpeedrunModel>, field: string, value: any) => any;
+  saveField: (model: {type: string} & Partial<SpeedrunModel>, field?: string, value?: any) => any;
 } & RouteComponentProps<{event: string}>;
 
 class ScheduleEditor extends React.Component<ScheduleEditorProps> {
@@ -37,13 +37,13 @@ class ScheduleEditor extends React.Component<ScheduleEditorProps> {
             event={event}
             drafts={drafts}
             speedruns={speedruns}
-            saveModel={editable ? saveModel_ : null}
-            editModel={editable ? editModel_ : null}
-            cancelEdit={editable ? cancelEdit_ : null}
-            newSpeedrun={editable ? newSpeedrun_ : null}
-            moveSpeedrun={editable ? moveSpeedrun : null}
-            saveField={editable ? saveField_ : null}
-            updateField={editable ? updateField_ : null}/>
+            saveModel={editable ? saveModel_ : undefined}
+            editModel={editable ? editModel_ : undefined}
+            cancelEdit={editable ? cancelEdit_ : undefined}
+            newSpeedrun={editable ? newSpeedrun_ : undefined}
+            moveSpeedrun={editable ? moveSpeedrun : undefined}
+            saveField={editable ? saveField_ : undefined}
+            updateField={editable ? updateField_ : undefined}/>
           : null)}
       </Spinner>
     );
@@ -64,15 +64,15 @@ class ScheduleEditor extends React.Component<ScheduleEditorProps> {
     if (status.event !== 'loading' && status.event !== 'success') {
       this.props.loadModels('event');
     }
-    if ((status.speedrun !== 'loading' && status.speedrun !== 'success') || event !== this.props.event) {
+    if ((status.speedrun !== 'loading' && status.speedrun !== 'success') || event !== this.props.event.short) {
       this.props.loadModels(
         'speedrun',
-        {event: event, all: 1}
+        {event, all: 1}
       );
     }
   }
 
-  saveModel_ = (pk: any, fields: Array<keyof SpeedrunModel>) => {
+  saveModel_ = (pk: any, fields: Partial<SpeedrunModel>) => {
     this.props.saveDraftModels([{type: 'speedrun', pk, fields}]);
   }
 
@@ -80,7 +80,7 @@ class ScheduleEditor extends React.Component<ScheduleEditorProps> {
     this.props.newDraftModel({type: 'speedrun', ...model});
   }
 
-  cancelEdit_ = (model: SpeedrunModel) => {
+  cancelEdit_ = (model: Partial<SpeedrunModel>) => {
     this.props.deleteDraftModel({type: 'speedrun', ...model});
   }
 
@@ -92,7 +92,7 @@ class ScheduleEditor extends React.Component<ScheduleEditorProps> {
     this.props.updateDraftModelField('speedrun', pk, field, value);
   }
 
-  saveField_ = (model: SpeedrunModel, field: string, value: any) => {
+  saveField_ = (model: Partial<SpeedrunModel>, field?: string, value?: any) => {
     this.props.saveField({type: 'speedrun', ...model}, field, value);
   }
 }
@@ -100,7 +100,7 @@ class ScheduleEditor extends React.Component<ScheduleEditorProps> {
 function select(state: any, props: ScheduleEditorProps) {
   const {models, drafts, status, singletons} = state;
   const {speedrun: speedruns, event: events = []} = models;
-  const event = events.find(e => e.pk === parseInt(props.match.params.event)) || null;
+  const event = events.find((e: EventModel) => e.pk === parseInt(props.match.params.event));
   const {me} = singletons;
   return {
     event,
@@ -116,7 +116,7 @@ function dispatch(dispatch: (action: any) => any) {
     loadModels: (model: string, params?: object, additive?: object) => {
       dispatch(actions.models.loadModels(model, params, additive));
     },
-    moveSpeedrun: (source: any, destination: any, before: boolean) => {
+    moveSpeedrun: (source: any, destination?: any, before?: boolean) => {
       dispatch(actions.models.setInternalModelField('speedrun', source, 'moving', true));
       dispatch(actions.models.setInternalModelField('speedrun', destination, 'moving', true));
       dispatch(actions.models.command({
@@ -132,7 +132,7 @@ function dispatch(dispatch: (action: any) => any) {
         }
       }));
     },
-    saveField: (model: SpeedrunModel, field: string, value: any) => {
+    saveField: (model: {type: string} & Partial<SpeedrunModel>, field?: string, value?: any) => {
       dispatch(actions.models.saveField(model, field, value));
     },
     newDraftModel: (model: Partial<SpeedrunModel>) => {

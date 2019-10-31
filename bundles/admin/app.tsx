@@ -6,7 +6,7 @@ import Spinner from '../public/spinner';
 import Dropdown from '../public/dropdown';
 import {actions, store, history} from '../public/api';
 import ScheduleEditor from "./schedule_editor";
-import {Event} from './types';
+import {EventModel} from './types';
 
 type AppProps = RouteComponentProps;
 
@@ -45,7 +45,7 @@ const App = (props: AppProps) => {
             overflowY: 'auto'
           }}>
             <ul style={{display: 'block'}}>
-              {events ? events.map((e: Event) => {
+              {events ? events.map((e: EventModel) => {
                   return (
                     <li key={e.pk}>
                       <Link to={`${match.url}/schedule_editor/${e.pk}`}>{e.short}</Link>

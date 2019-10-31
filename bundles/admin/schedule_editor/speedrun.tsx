@@ -15,16 +15,16 @@ import {SpeedrunModel, Model} from '../types';
 
 type SpeedrunProps = {
   speedrun: SpeedrunModel;
-  draft: SpeedrunModel;
+  draft: Partial<SpeedrunModel>;
   isDragging: boolean;
-  moveSpeedrun: (source: any, destination?: any, before?: boolean) => any;
+  moveSpeedrun?: (source: any, destination?: any, before?: boolean) => any;
   connectDragSource: (element: React.ReactElement) => any;
   connectDragPreview: (element: React.ReactElement) => any;
-  saveField: (model: SpeedrunModel, field: string, value: any) => any;
-  updateField: (pk: number, field: string, value: any) => any;
-  cancelEdit: (draft: SpeedrunModel) => any;
-  editModel: (model: SpeedrunModel) => any;
-  saveModel: (pk: number, fields: Partial<SpeedrunModel>) => any;
+  saveField?: (model: SpeedrunModel, field: string, value: any) => any;
+  updateField?: (pk: number, field: string, value: any) => any;
+  cancelEdit?: (draft: Partial<SpeedrunModel>) => any;
+  editModel?: (model: SpeedrunModel) => any;
+  saveModel?: (pk: number, fields: Partial<SpeedrunModel>) => any;
 };
 
 class Speedrun extends React.Component<SpeedrunProps> {
@@ -166,25 +166,25 @@ class Speedrun extends React.Component<SpeedrunProps> {
   }
 
   editModel_ = () => {
-    this.props.editModel(this.props.speedrun);
+    this.props.editModel && this.props.editModel(this.props.speedrun);
   }
 
   updateField_ = (field: string, value: any) => {
-    this.props.updateField(this.props.speedrun.pk, field, value);
+    this.props.updateField && this.props.updateField(this.props.speedrun.pk, field, value);
   }
 
   nullOrder_ = () => {
-    this.props.saveField(this.props.speedrun, 'order', null);
+    this.props.saveField && this.props.saveField(this.props.speedrun, 'order', null);
   }
 
   cancelEdit_ = () => {
-    this.props.cancelEdit(this.props.draft);
+    this.props.cancelEdit && this.props.cancelEdit(this.props.draft);
   }
 
   save_ = () => {
     const params = this.getChanges();
     if (Object.keys(params).length) {
-      this.props.saveModel(this.props.speedrun.pk, params);
+      this.props.saveModel && this.props.saveModel(this.props.speedrun.pk, params);
     }
   }
 }
