@@ -19,13 +19,17 @@ function orderSort(a, b) {
     }
 }
 
-class Header extends React.Component {
+type HeaderProps = {
+  title: string;
+};
+
+class Header extends React.Component<HeaderProps> {
     render() {
         const { title } = this.props;
         return (
             <thead>
                 <tr>
-                    <td colSpan="10" style={{textAlign: 'center'}}>{title}</td>
+                    <td colSpan={10} style={{textAlign: 'center'}}>{title}</td>
                 </tr>
                 <tr>
                     <th>Start Time</th>
@@ -36,14 +40,19 @@ class Header extends React.Component {
                     <th>Estimate/Run Time</th>
                     <th>Setup</th>
                     <th>Description</th>
-                    <th colSpan="2">Commentators</th>
+                    <th colSpan={2}>Commentators</th>
                 </tr>
             </thead>
         );
     }
 }
 
-class SpeedrunTable extends React.Component {
+
+type SpeedrunTableProps = {
+
+};
+
+class SpeedrunTable extends React.Component<SpeedrunTableProps> {
     constructor(props) {
         super(props);
         this.newSpeedrun_ = this.newSpeedrun_.bind(this);

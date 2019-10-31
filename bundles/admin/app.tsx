@@ -1,13 +1,16 @@
 import React from 'react';
-import {Route} from 'react-router';
+import {Route, RouteComponentProps} from 'react-router';
 import {Link} from 'react-router-dom';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import Spinner from '../public/spinner';
 import Dropdown from '../public/dropdown';
 import {actions, store, history} from '../public/api';
 import ScheduleEditor from "./schedule_editor";
+import {Event} from './types';
 
-const App = (props) => {
+type AppProps = RouteComponentProps;
+
+const App = (props: AppProps) => {
   const {match} = props;
   const dispatch = useDispatch();
 
@@ -42,7 +45,7 @@ const App = (props) => {
             overflowY: 'auto'
           }}>
             <ul style={{display: 'block'}}>
-              {events ? events.map((e) => {
+              {events ? events.map((e: Event) => {
                   return (
                     <li key={e.pk}>
                       <Link to={`${match.url}/schedule_editor/${e.pk}`}>{e.short}</Link>

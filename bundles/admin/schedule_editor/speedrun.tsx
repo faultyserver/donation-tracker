@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {DragSource} from 'react-dnd';
+import {DragSource, DragSourceMonitor} from 'react-dnd';
 import moment from 'moment';
 
 import Spinner from '../../public/spinner';
@@ -11,8 +11,24 @@ import ErrorList from '../../public/error_list';
 
 import SpeedrunDropTarget from './drag_drop/speedrun_drop_target';
 
-class Speedrun extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
+import {SpeedrunModel, Model} from '../types';
+
+type SpeedrunProps = {
+  speedrun: SpeedrunModel;
+  draft: SpeedrunModel;
+  isDragging: boolean;
+  moveSpeedrun: (source: any, destination?: any, before?: boolean) => any;
+  connectDragSource: (element: React.ReactElement) => any;
+  connectDragPreview: (element: React.ReactElement) => any;
+  saveField: (model: SpeedrunModel, field: string, value: any) => any;
+  updateField: (pk: number, field: string, value: any) => any;
+  cancelEdit: (draft: SpeedrunModel) => any;
+  editModel: (model: SpeedrunModel) => any;
+  saveModel: (pk: number, fields: Partial<SpeedrunModel>) => any;
+};
+
+class Speedrun extends React.Component<SpeedrunProps> {
+  shouldComponentUpdate(nextProps: SpeedrunProps) {
     return !_.isEqual(nextProps, this.props);
   }
 
@@ -138,14 +154,14 @@ class Speedrun extends React.Component {
 
   getChanges() {
     return _.pick(
-      _.pickBy(this.props.draft, (value, key) => {
+      _.pickBy(this.props.draft, (value, key: keyof SpeedrunModel) => {
         return value !== (this.props.speedrun ? this.props.speedrun[key] : '');
       }),
       ['name', 'deprecated_runners', 'console', 'run_time', 'setup_time', 'description', 'commentators']
     );
   }
 
-  legalMove_ = (source_pk) => {
+  legalMove_ = (source_pk: any) => {
     return source_pk && this.props.speedrun.pk !== source_pk;
   }
 
@@ -153,7 +169,7 @@ class Speedrun extends React.Component {
     this.props.editModel(this.props.speedrun);
   }
 
-  updateField_ = (field, value) => {
+  updateField_ = (field: string, value: any) => {
     this.props.updateField(this.props.speedrun.pk, field, value);
   }
 
@@ -173,39 +189,13 @@ class Speedrun extends React.Component {
   }
 }
 
-const SpeedrunShape = PropTypes.shape({
-  pk: PropTypes.number,
-  name: PropTypes.string.isRequired,
-  order: PropTypes.number,
-  deprecated_runners: PropTypes.string.isRequired,
-  //console: PropTypes.string.isRequired,
-  start_time: PropTypes.string,
-  end_time: PropTypes.string,
-  description: PropTypes.string.isRequired,
-  commentators: PropTypes.string.isRequired,
-});
 
-Speedrun
-  .propTypes = {
-  connectDragSource: PropTypes.func.isRequired,
-  connectDragPreview: PropTypes.func.isRequired,
-  isDragging: PropTypes.bool.isRequired,
-  speedrun: SpeedrunShape.isRequired,
-  draft: SpeedrunShape,
-  moveSpeedrun: PropTypes.func,
-  saveField: PropTypes.func,
-  saveModel: PropTypes.func,
-  cancelEdit: PropTypes.func,
-  editModel: PropTypes.func,
-};
-
-const
-  speedrunSource = {
-    beginDrag: function (props) {
+const speedrunSource = {
+    beginDrag: function (props: SpeedrunProps) {
       return {source_pk: props.speedrun.pk};
     },
 
-    endDrag: function (props, monitor) {
+    endDrag: function (props: SpeedrunProps, monitor: DragSourceMonitor) {
       const result = monitor.getDropResult();
       if (result && result.action) {
         result.action(props.speedrun.pk);
@@ -213,7 +203,7 @@ const
     },
   };
 
-Speedrun = DragSource('Speedrun', speedrunSource, function collect(connect, monitor) {
+const ConnectedSpeedrun = DragSource('Speedrun', speedrunSource, function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
@@ -221,4 +211,4 @@ Speedrun = DragSource('Speedrun', speedrunSource, function collect(connect, moni
   }
 })(Speedrun);
 
-export default Speedrun;
+export default ConnectedSpeedrun;
