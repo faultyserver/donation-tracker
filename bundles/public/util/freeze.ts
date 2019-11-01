@@ -1,4 +1,4 @@
-export default function freeze(obj) {
+export default function freeze(obj: any) {
     if (Object.isFrozen(obj)) return obj;
 
     const propNames = Object.getOwnPropertyNames(obj);

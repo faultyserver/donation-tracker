@@ -1,10 +1,11 @@
 import React from 'react';
 import {Route, RouteComponentProps} from 'react-router';
 import {Link} from 'react-router-dom';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import Spinner from '../public/spinner';
 import Dropdown from '../public/dropdown';
 import {actions, store, history} from '../public/api';
+import {useSelector} from '../public/hooks/useSelector';
 import ScheduleEditor from "./schedule_editor";
 import {EventModel} from './types';
 

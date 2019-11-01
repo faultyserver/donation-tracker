@@ -1,40 +1,70 @@
 import _ from 'lodash';
+import {Dispatch} from 'redux';
+import {Model} from '../models';
 
 import Cookies from '../../util/cookies';
 import HTTPUtil from '../../util/http';
 
+export type ModelType = 'speedrun' | 'me';
 
-function onModelStatusLoad(model) {
+export type ModelCollectionAction =
+  | {type: 'MODEL_COLLECTION_REPLACE', model: ModelType, models: Array<Model>}
+  | {type: 'MODEL_COLLECTION_ADD', model: ModelType, models: Array<Model>}
+  | {type: 'MODEL_COLLECTION_REMOVE', model: ModelType, models: Array<Model>};
+
+export type ModelDraftAction =
+  | {type: 'MODEL_NEW_DRAFT', model: {type: ModelType} & Model}
+  | {type: 'MODEL_DELETE_DRAFT', model: Partial<Model>}
+  | {type: 'MODEL_SAVE_DRAFT_ERROR', model: Model, error: any, fields: any}
+  | {type: 'MODEL_DRAFT_UPDATE_FIELD', model: ModelType, pk: string, field: string, value: any};
+
+export type ModelInternalAction =
+  | {type: 'MODEL_SET_INTERNAL_FIELD', model: ModelType, pk: string, field: string, value: any};
+
+export type ModelStatusAction =
+  | {type: 'MODEL_STATUS_LOADING', model: ModelType}
+  | {type: 'MODEL_STATUS_SUCCESS', model: ModelType}
+  | {type: 'MODEL_STATUS_ERROR', model: ModelType};
+
+export type ModelAction =
+  | ModelStatusAction
+  | ModelInternalAction
+  | ModelDraftAction
+  | ModelCollectionAction;
+
+
+
+export function onModelStatusLoad(model: ModelType) {
     return {
         type: 'MODEL_STATUS_LOADING', model
     };
 }
 
-function onModelStatusSuccess(model) {
+export function onModelStatusSuccess(model: ModelType) {
     return {
         type: 'MODEL_STATUS_SUCCESS', model
     };
 }
 
-function onModelStatusError(model) {
+export function onModelStatusError(model: ModelType) {
     return {
         type: 'MODEL_STATUS_ERROR', model
     };
 }
 
-function onModelCollectionReplace(model, models) {
+export function onModelCollectionReplace(model: ModelType, models: Array<Model>) {
     return {
         type: 'MODEL_COLLECTION_REPLACE', model, models
     };
 }
 
-function onModelCollectionAdd(model, models) {
+export function onModelCollectionAdd(model: ModelType, models: Array<Model>) {
     return {
         type: 'MODEL_COLLECTION_ADD', model, models
     };
 }
 
-function onModelCollectionRemove(model, models) {
+export function onModelCollectionRemove(model: ModelType, models: Array<Model>) {
     return {
         type: 'MODEL_COLLECTION_REMOVE', model, models
     };
@@ -42,20 +72,21 @@ function onModelCollectionRemove(model, models) {
 
 // TODO: Better solution than this
 const modelTypeMap = {
-    speedrun: 'run'
+    speedrun: 'run',
+    me: 'me',
 };
 
-function loadModels(model, params, additive) {
-  return (dispatch) => {
+function loadModels(model: ModelType, params?: object, additive?: object) {
+  return (dispatch: Dispatch) => {
     dispatch(onModelStatusLoad(model));
-    return HTTPUtil.get(`${API_ROOT}search`, {
+    return HTTPUtil.get(`${window.API_ROOT}search`, {
       ...params,
       type: modelTypeMap[model] || model,
     }).then((models) => {
       dispatch(onModelStatusSuccess(model));
       const action = additive ? onModelCollectionAdd : onModelCollectionReplace;
       dispatch(action(model,
-        models.reduce((acc, v) => {
+        models.reduce((acc: any, v: any) => {
           if (v.model.toLowerCase() === `tracker.${model}`.toLowerCase()) {
             v.fields.pk = v.pk;
             acc.push(v.fields);
@@ -72,65 +103,65 @@ function loadModels(model, params, additive) {
   }
 }
 
-function onNewDraftModel(model) {
+function onNewDraftModel(model: {type: ModelType} & Model) {
     return {
         type: 'MODEL_NEW_DRAFT', model
     };
 }
 
-function newDraftModel(model) {
-    return (dispatch) => {
+function newDraftModel(model: {type: ModelType} & Model) {
+    return (dispatch: Dispatch) => {
         dispatch(onNewDraftModel(model));
     };
 }
 
-function onDeleteDraftModel(model) {
+function onDeleteDraftModel(model: Partial<Model>) {
     return {
         type: 'MODEL_DELETE_DRAFT', model
     }
 }
 
-function deleteDraftModel(model) {
-    return (dispatch) => {
+function deleteDraftModel(model: Partial<Model>) {
+    return (dispatch: Dispatch) => {
         dispatch(onDeleteDraftModel(model));
     };
 }
 
-function onDraftModelUpdateField(model, pk, field, value) {
+function onDraftModelUpdateField(model: ModelType, pk: string, field: string, value: any) {
     return {
         type: 'MODEL_DRAFT_UPDATE_FIELD', model, pk, field, value
     };
 }
 
-function updateDraftModelField(model, pk, field, value) {
-    return (dispatch) => {
+function updateDraftModelField(model: ModelType, pk: any, field: string, value: any) {
+    return (dispatch: Dispatch) => {
         dispatch(onDraftModelUpdateField(model, pk, field, value));
     };
 }
 
-function onSetInternalModelField(model, pk, field, value) {
+function onSetInternalModelField(model: ModelType, pk: any, field: string, value: any) {
     return {
         type: 'MODEL_SET_INTERNAL_FIELD', model, pk, field, value
     };
 }
 
-function setInternalModelField(model, pk, field, value) {
-    return (dispatch) => {
+function setInternalModelField(model: ModelType, pk: any, field: string, value: any) {
+    return (dispatch: Dispatch) => {
         dispatch(onSetInternalModelField(model, pk, field, value));
     };
 }
 
-function onSaveDraftModelError(model, error, fields) {
+function onSaveDraftModelError(model: Partial<Model>, error: any, fields: any) {
     return {
         type: 'MODEL_SAVE_DRAFT_ERROR', model, error, fields
     };
 }
 
-function saveDraftModels(models) {
-    return (dispatch) => {
+function saveDraftModels(models: Array<Partial<Model>>) {
+    return (dispatch: Dispatch) => {
         _.each(models, (model) => {
             dispatch(setInternalModelField(model.type, model.pk, 'saving', true));
-            const url = model.pk < 0 ? `${API_ROOT}add/` : `${API_ROOT}edit/`;
+            const url = model.pk < 0 ? `${window.API_ROOT}add/` : `${window.API_ROOT}edit/`;
 
             HTTPUtil.post(url, {
                 type: modelTypeMap[model.type] || model.type,
@@ -160,14 +191,14 @@ function saveDraftModels(models) {
     }
 }
 
-function saveField(model, field, value) {
-    return (dispatch) => {
+function saveField(model: Partial<Model>, field?: string, value?: any) {
+    return (dispatch: Dispatch) => {
         if (model.pk) {
             dispatch(setInternalModelField(model.type, model.pk, 'saving', true));
             if (value === undefined || value === null) {
                 value = 'None';
             }
-            HTTPUtil.post(`${API_ROOT}edit/`, {
+            HTTPUtil.post(`${window.API_ROOT}edit/`, {
                 type: modelTypeMap[model.type] || model.type,
                 id: model.pk,
                 [field]: value
@@ -196,8 +227,8 @@ function saveField(model, field, value) {
 }
 
 function command(command) {
-    return (dispatch) => {
-        return HTTPUtil.post(`${API_ROOT}command/`, {
+    return (dispatch: Dispatch) => {
+        return HTTPUtil.post(`${window.API_ROOT}command/`, {
             data: JSON.stringify({
                 command: command.type,
                 ...command.params,
